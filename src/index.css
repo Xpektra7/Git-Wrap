@@ -1,1 +1,18 @@
 @import "tailwindcss";
+@font-face {
+    font-family: "JetBrains Mono";
+    src: url(./assets/JetBrainsMono-Variable.woff2) ;
+}
+@font-face {
+    font-family: "Satoshi";
+    src: url(./assets/Satoshi-Variable.woff2);
+}
+
+h1,h2,h3,h4,h5,h6,h7 {
+    font-family: "JetBrains Mono", monospace;
+}
+body {
+    font-family: "Satoshi", sans-serif;
+    background-color: hsl(0, 0%, 94%);
+    color: hsl(0, 0%, 20%);
+}
