@@ -94,3 +94,16 @@ export async function mostActiveRepo(username, year) {
 
   return { repo: maxRepo, commits: maxCommits };
 }
+
+
+export async function starGrazer(username) {
+  const repos = await safeFetch(
+    `${GITHUB_API}/users/${username}/repos?per_page=100&type=owner`
+  );
+
+  let stars = 0;
+  for (const repo of repos) {
+    stars += repo.stargazers_count || 0;
+  }
+  return stars;
+}

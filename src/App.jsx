@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import Stats from "./Stats";
 
 export default function App() {
-  const username = "coderheem";
+  const username = "Xpektra7";
   const year = 2025
   
 
