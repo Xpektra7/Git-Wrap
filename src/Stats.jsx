@@ -15,13 +15,13 @@ export default function Stats({ username, year}) {
 
 
   useEffect(() => {
-    fetchRepos(username,year).then(setRepos);
+  fetchRepos(username, year).then(setRepos);
 
-    getTotalCommits(username).then(setCommitsInAYear);
+  getTotalCommits(username, year).then(setCommitsInAYear);
 
-    mostActiveRepo(username, year).then(setActiveRepo);
+  mostActiveRepo(username, year).then(setActiveRepo);
 
-    starGrazer(username,year).then(setStars);
+  starGrazer(username).then(setStars);
 
 
   }, [username]);

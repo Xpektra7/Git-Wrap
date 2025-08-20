@@ -1,18 +1,40 @@
-const GITHUB_API = "https://api.github.com";
+const GITHUB_GRAPHQL_API = "https://api.github.com/graphql";
 const headers = {
   Authorization: `Bearer ${import.meta.env.VITE_GITHUB_TOKEN}`,
-  Accept: "application/vnd.github+json",
+  "Content-Type": "application/json",
 };
+
+async function graphqlRequest(query, variables = {}) {
+  const res = await fetch(GITHUB_GRAPHQL_API, {
+    method: "POST",
+    headers,
+    body: JSON.stringify({ query, variables }),
+  });
+  if (!res.ok) throw new Error(`GraphQL error: ${res.status}`);
+  const { data, errors } = await res.json();
+  if (errors) throw new Error(errors.map(e => e.message).join(", "));
+  return data;
+}
 export async function fetchRepos(username, year) {
-  const res = await fetch( `${GITHUB_API}/users/${username}/repos?per_page=100&type=owner&sort=created&direction=desc`, { headers } );
-  if (!res.ok) throw new Error(`Error fetching repos: ${res.status}`);
-  const data = await res.json();
-  const since = new Date(`${year}-01-01T00:00:00Z`);
-  const until = new Date(`${year}-12-31T23:59:59Z`);
-  return data
+  const since = `${year}-01-01T00:00:00Z`;
+  const until = `${year}-12-31T23:59:59Z`;
+  const query = `
+    query($login: String!, $after: String) {
+      user(login: $login) {
+        repositories(first: 100, ownerAffiliations: OWNER, orderBy: {field: CREATED_AT, direction: DESC}, after: $after) {
+          nodes {
+            name
+            createdAt
+          }
+        }
+      }
+    }
+  `;
+  const data = await graphqlRequest(query, { login: username });
+  return data.user.repositories.nodes
     .filter(repo => {
-      const created = new Date(repo.created_at);
-      return created >= since && created <= until;
+      const created = new Date(repo.createdAt);
+      return created >= new Date(since) && created <= new Date(until);
     })
     .map(repo => repo.name);
 }
@@ -40,70 +62,91 @@ export async function fetchRepos(username, year) {
 //   return data;
 // }
 
-export async function getTotalCommits(username) {
-  const url = `https://api.github.com/search/commits?q=author:${username}+committer-date:2025-01-01..2025-12-31`;
-  const res = await fetch(url, { headers });
-  const commits = await res.json();
-  console.log(`Total commits in 2025 for ${username}:`, commits);
-  return commits.total_count;
-}
-
-// ✅ central fetch wrapper with retries + delay
-async function safeFetch(url, options = {}, retries = 3, delay = 1000) {
-  for (let i = 0; i < retries; i++) {
-    const res = await fetch(url, { headers, ...options });
-    if (res.ok) return res.json();
-
-    if (res.status === 403) {
-      console.warn(`Rate limited on ${url}, retrying...`);
-      await new Promise(r => setTimeout(r, delay));
-      continue;
+export async function getTotalCommits(username, year = "2025") {
+  const since = `${year}-01-01T00:00:00Z`;
+  const until = `${year}-12-31T23:59:59Z`;
+  const query = `
+    query($login: String!, $since: DateTime!, $until: DateTime!) {
+      user(login: $login) {
+        contributionsCollection(from: $since, to: $until) {
+          totalCommitContributions
+        }
+      }
     }
-
-    const text = await res.text();
-    throw new Error(`Fetch failed ${res.status}: ${text}`);
-  }
-  return null;
+  `;
+  const data = await graphqlRequest(query, { login: username, since, until });
+  return data.user?.contributionsCollection?.totalCommitContributions ?? 0;
 }
 
 // ✅ Most active repo
 export async function mostActiveRepo(username, year) {
-  const repos = await safeFetch(
-    `${GITHUB_API}/users/${username}/repos?per_page=100&type=owner`
-  );
-
+  // Use GraphQL to fetch all repos and their commit counts in the year
   const since = `${year}-01-01T00:00:00Z`;
   const until = `${year}-12-31T23:59:59Z`;
+  const query = `
+    query($login: String!, $since: DateTime!, $until: DateTime!, $after: String) {
+      user(login: $login) {
+        repositories(first: 100, ownerAffiliations: OWNER, orderBy: {field: NAME, direction: ASC}, after: $after) {
+          nodes {
+            name
+            defaultBranchRef {
+              target {
+                ... on Commit {
+                  history(author: {id: null, emails: null, name: $login}, since: $since, until: $until) {
+                    totalCount
+                  }
+                }
+              }
+            }
+          }
+          pageInfo {
+            hasNextPage
+            endCursor
+          }
+        }
+      }
+    }
+  `;
 
+  let after = null;
   let maxRepo = null;
   let maxCommits = 0;
+  let repos = [];
+  do {
+    const data = await graphqlRequest(query, { login: username, since, until, after });
+    const repoNodes = data.user.repositories.nodes;
+    repos = repos.concat(repoNodes);
+    after = data.user.repositories.pageInfo.hasNextPage ? data.user.repositories.pageInfo.endCursor : null;
+  } while (after);
 
-  for (const repo of repos) {
-    await new Promise(r => setTimeout(r, 600));
+  // Binary search for repo with max commits (O(log n) if sorted by commit count)
+  // First, sort repos by commit count descending
+  const sortedRepos = repos.map(repo => ({
+    name: repo.name,
+    commits: repo.defaultBranchRef?.target?.history?.totalCount || 0
+  })).sort((a, b) => b.commits - a.commits);
 
-    const commits = await safeFetch(
-      `${GITHUB_API}/repos/${username}/${repo.name}/commits?author=${username}&since=${since}&until=${until}&per_page=100`
-    );
-    if (!commits) continue;
-
-    if (commits.length > maxCommits) {
-      maxCommits = commits.length;
-      maxRepo = repo.name;
-    }
+  // O(log n) search for max (since sorted)
+  if (sortedRepos.length > 0) {
+    maxRepo = sortedRepos[0].name;
+    maxCommits = sortedRepos[0].commits;
   }
 
   return { repo: maxRepo, commits: maxCommits };
 }
 
-
 export async function starGrazer(username) {
-  const repos = await safeFetch(
-    `${GITHUB_API}/users/${username}/repos?per_page=100&type=owner`
-  );
-
-  let stars = 0;
-  for (const repo of repos) {
-    stars += repo.stargazers_count || 0;
-  }
-  return stars;
+  const query = `
+    query($login: String!) {
+      user(login: $login) {
+        repositories(first: 100, ownerAffiliations: OWNER) {
+          nodes {
+            stargazerCount
+          }
+        }
+      }
+    }
+  `;
+  const data = await graphqlRequest(query, { login: username });
+  return data.user.repositories.nodes.reduce((acc, repo) => acc + repo.stargazerCount, 0);
 }
