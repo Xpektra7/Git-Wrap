@@ -119,14 +119,11 @@ export async function mostActiveRepo(username, year) {
     after = data.user.repositories.pageInfo.hasNextPage ? data.user.repositories.pageInfo.endCursor : null;
   } while (after);
 
-  // Binary search for repo with max commits (O(log n) if sorted by commit count)
-  // First, sort repos by commit count descending
   const sortedRepos = repos.map(repo => ({
     name: repo.name,
     commits: repo.defaultBranchRef?.target?.history?.totalCount || 0
   })).sort((a, b) => b.commits - a.commits);
 
-  // O(log n) search for max (since sorted)
   if (sortedRepos.length > 0) {
     maxRepo = sortedRepos[0].name;
     maxCommits = sortedRepos[0].commits;
