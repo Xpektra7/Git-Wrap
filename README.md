@@ -17,10 +17,10 @@ GitWrap is a React & Tailwind single-page application that generates a personali
 ## 🛣️ Roadmap
 
 * [ ] Add contribution heatmap visualization.  
-* [ ] Implement GraphQL for richer data.  
+* [x] Implement GraphQL for richer data.  
 * [ ] Add caching & offline support.  
 * [ ] Dark mode and theme switcher.  
-* [ ] Export summary as shareable social cards.  
+* [ ] Export summary as shareable social cards.
 
 ---
 
