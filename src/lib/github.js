@@ -80,55 +80,37 @@ export async function getTotalCommits(username, year = "2025") {
 
 // ✅ Most active repo
 export async function mostActiveRepo(username, year) {
-  // Use GraphQL to fetch all repos and their commit counts in the year
   const since = `${year}-01-01T00:00:00Z`;
   const until = `${year}-12-31T23:59:59Z`;
+  // Use contributionsCollection.commitContributionsByRepository for accurate commit counts
   const query = `
-    query($login: String!, $since: DateTime!, $until: DateTime!, $after: String) {
+    query($login: String!, $since: DateTime!, $until: DateTime!) {
       user(login: $login) {
-        repositories(first: 100, ownerAffiliations: OWNER, orderBy: {field: NAME, direction: ASC}, after: $after) {
-          nodes {
-            name
-            defaultBranchRef {
-              target {
-                ... on Commit {
-                  history(author: {id: null, emails: null, name: $login}, since: $since, until: $until) {
-                    totalCount
-                  }
-                }
-              }
+        contributionsCollection(from: $since, to: $until) {
+          commitContributionsByRepository(maxRepositories: 100) {
+            repository {
+              name
             }
-          }
-          pageInfo {
-            hasNextPage
-            endCursor
+            contributions {
+              totalCount
+            }
           }
         }
       }
     }
   `;
-
-  let after = null;
+  const data = await graphqlRequest(query, { login: username, since, until });
+  const repos = data.user?.contributionsCollection?.commitContributionsByRepository || [];
   let maxRepo = null;
   let maxCommits = 0;
-  let repos = [];
-  do {
-    const data = await graphqlRequest(query, { login: username, since, until, after });
-    const repoNodes = data.user.repositories.nodes;
-    repos = repos.concat(repoNodes);
-    after = data.user.repositories.pageInfo.hasNextPage ? data.user.repositories.pageInfo.endCursor : null;
-  } while (after);
-
-  const sortedRepos = repos.map(repo => ({
-    name: repo.name,
-    commits: repo.defaultBranchRef?.target?.history?.totalCount || 0
-  })).sort((a, b) => b.commits - a.commits);
-
-  if (sortedRepos.length > 0) {
-    maxRepo = sortedRepos[0].name;
-    maxCommits = sortedRepos[0].commits;
+  for (const entry of repos) {
+    const repoName = entry.repository?.name;
+    const commits = entry.contributions?.totalCount || 0;
+    if (commits > maxCommits) {
+      maxRepo = repoName;
+      maxCommits = commits;
+    }
   }
-
   return { repo: maxRepo, commits: maxCommits };
 }
 
