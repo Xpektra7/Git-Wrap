@@ -32,7 +32,7 @@ export default function Stats({ username, year}) {
     <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
       <StatCard title={`Repos Created in ${year}`} value={repos ? repos.length : 0} />
       <StatCard title={`Total Commits in ${year}`} value={commitsInAYear} />
-      <StatCard title="Most Active Repo" value={activeRepo ? `${activeRepo.repo} (${activeRepo.commits})` : "Loading..."} />
+      <StatCard title="Most Active Repo" value={`${activeRepo.repo} (${activeRepo.commits})`} />
       <StatCard title="Stars Received" value={stars} />
     </div>
   );
