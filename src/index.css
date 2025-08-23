@@ -11,8 +11,23 @@
 h1,h2,h3,h4,h5,h6,h7 {
     font-family: "JetBrains Mono", monospace;
 }
-body {
-    font-family: "Satoshi", sans-serif;
-    background-color: hsl(0, 0%, 94%);
-    color: hsl(0, 0%, 20%);
+body[data-theme="light"]{
+    --background-color: hsl(0, 0%, 94%);
+    --color: hsl(0, 0%, 20%);
+    --border: hsl(0, 0%, 60%);
+    --sub-text: hsl(0, 0%, 30%);
 }
+body[data-theme="dark"]{
+    --background-color: hsl(0, 0%, 6%);
+    --color: hsl(0, 0%, 94%);
+    --border: hsl(0, 0%, 20%);
+    --sub-text: hsl(0, 0%, 60%);
+}
+body{
+    font-family: "Satoshi", sans-serif;
+    transition: all 0.3s ease-in-out;
+    background-color: var(--background-color);
+    color: var(--color);
+    border-color: var(--border);
+}
+

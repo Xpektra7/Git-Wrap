@@ -39,29 +39,6 @@ export async function fetchRepos(username, year) {
     .map(repo => repo.name);
 }
 
-// export async function repoLanguage(username, repoName) {
-//   const since = "2025-01-01T00:00:00Z";
-//   const until = "2025-12-31T23:59:59Z";
-
-//   const url = `${GITHUB_API}/repos/${username}/${repoName}/commits?author=${username}&since=${since}&until=${until}&per_page=100`;
-//   const res = await fetch(url, { headers });
-//   if (!res.ok) throw new Error(`Error fetching commits: ${res.status}`);
-//   const data = await res.json();
-//   return data.length;
-// }
-
-// async function fetchRepoCommits(username, repoName) {
-//   const since = `2025-01-01T00:00:00Z`;
-//   const until = `2025-12-31T23:59:59Z`;
-
-//   const res = await fetch(
-//     `${GITHUB_API}/repos/${username}/${repoName}/commits?author=${username}&since=${since}&until=${until}&per_page=100`
-//   );
-//   const data = await res.json();
-//   if (!res.ok) throw new Error(`Error fetching commits: ${res.status}`);
-//   return data;
-// }
-
 export async function getTotalCommits(username, year = "2025") {
   const since = `${year}-01-01T00:00:00Z`;
   const until = `${year}-12-31T23:59:59Z`;
