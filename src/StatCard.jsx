@@ -28,7 +28,7 @@ export default function StatCard({
             
           </p>
           <p className="text-sm text-(--sub-text)">
-            {growth > 0 ? (growth =="↑") : "↓"} {Math.abs(growth)}%
+            {growth > 0 ? "↑" : "↓"} {Math.abs(growth)}%
           </p>
         </div>
       )}
