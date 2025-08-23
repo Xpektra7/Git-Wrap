@@ -33,18 +33,23 @@ export default function Stats({ username, year }) {
 
   return (
     <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+      {/* Repos Created */}
       <StatCard
         title={`Repos Created in ${year}`}
         value={repos ? repos.length : 0}
         prevValue={prevRepos ? prevRepos.length : 0}
         growth={prevRepos ? Math.round(((repos.length - prevRepos.length) / prevRepos.length) * 100) : 0}
       />
+
+      {/* Commits in a Year */}
       <StatCard
         title={`Total Commits in ${year}`}
         value={commitsInAYear}
         prevValue={prevCommitsInAYear}
         growth={prevCommitsInAYear ? Math.round(((commitsInAYear - prevCommitsInAYear) / prevCommitsInAYear) * 100) : 0}
       />
+
+      {/* Most Active Repo */}
       <StatCard
         title="Most Active Repo"
         value={activeRepo?.repo || "No activity"}
@@ -53,6 +58,8 @@ export default function Stats({ username, year }) {
         prevSubtitle={prevActiveRepo?.commits || "0"}
         growth={prevActiveRepo ? Math.round(((activeRepo.commits - prevActiveRepo.commits) / prevActiveRepo.commits) * 100) : 0}
       />
+
+      {/* Stars Received */}
       <StatCard title="Stars Received" value={stars} />
     </div>
   );

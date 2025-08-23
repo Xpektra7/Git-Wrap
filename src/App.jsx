@@ -27,7 +27,7 @@ export default function App() {
           />
           <button
             className="bg-(--color) text-(--background-color) rounded p-1 px-4 text-sm cursor-pointer"
-            onClick={() => setUsername(name)}
+            onClick={() => setUsername(name.trim())}
           >
             Wrap
           </button>
