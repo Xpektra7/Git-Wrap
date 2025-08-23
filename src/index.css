@@ -13,7 +13,7 @@ h1,h2,h3,h4,h5,h6,h7 {
 }
 body[data-theme="light"]{
     --background-color: hsl(0, 0%, 94%);
-    --color: hsl(0, 0%, 20%);
+    --color: hsl(0, 0%, 10%);
     --border: hsl(0, 0%, 60%);
     --sub-text: hsl(0, 0%, 30%);
 }
