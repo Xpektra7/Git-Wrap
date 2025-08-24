@@ -1,3 +1,231 @@
+// Top languages used across user's repos for the year
+export async function getTopLanguages(username, year) {
+  const since = `${year}-01-01T00:00:00Z`;
+  const until = `${year}-12-31T23:59:59Z`;
+  const query = `
+    query($login: String!) {
+      user(login: $login) {
+        repositories(first: 100, ownerAffiliations: OWNER) {
+          nodes {
+            name
+            createdAt
+            languages(first: 10) {
+              nodes { name }
+            }
+          }
+        }
+      }
+    }
+  `;
+  try {
+    const data = await graphqlRequest(query, { login: username });
+    if (!data.user) throw new Error("User not found");
+    const langCount = {};
+    data.user.repositories.nodes.forEach(repo => {
+      const created = new Date(repo.createdAt);
+      if (created >= new Date(since) && created <= new Date(until)) {
+        repo.languages.nodes.forEach(lang => {
+          langCount[lang.name] = (langCount[lang.name] || 0) + 1;
+        });
+      }
+    });
+    return Object.entries(langCount)
+      .sort((a, b) => b[1] - a[1])
+      .map(([name, count]) => ({ name, count }));
+  } catch (e) {
+    return { error: e.message };
+  }
+}
+// Stars received by user's repos in a given year
+export async function getStarsReceived(username, year) {
+  const since = `${year}-01-01T00:00:00Z`;
+  const until = `${year}-12-31T23:59:59Z`;
+  const query = `
+    query($login: String!) {
+      user(login: $login) {
+        repositories(first: 100, ownerAffiliations: OWNER) {
+          nodes {
+            name
+            createdAt
+            stargazers(first: 100, orderBy: {field: STARRED_AT, direction: DESC}) {
+              edges {
+                starredAt
+              }
+            }
+          }
+        }
+      }
+    }
+  `;
+  try {
+    const data = await graphqlRequest(query, { login: username });
+    if (!data.user) throw new Error("User not found");
+    let count = 0;
+    data.user.repositories.nodes.forEach(repo => {
+      repo.stargazers.edges.forEach(edge => {
+        const starred = new Date(edge.starredAt);
+        if (starred >= new Date(since) && starred <= new Date(until)) {
+          count++;
+        }
+      });
+    });
+    return count;
+  } catch (e) {
+    return { error: e.message };
+  }
+}
+// Stars given by user in a given year
+export async function getStarsGiven(username, year) {
+  const since = `${year}-01-01T00:00:00Z`;
+  const until = `${year}-12-31T23:59:59Z`;
+  const query = `
+    query($login: String!) {
+      user(login: $login) {
+        starredRepositories(first: 100) {
+          edges {
+            starredAt
+            node {
+              name
+              owner { login }
+            }
+          }
+        }
+      }
+    }
+  `;
+  try {
+    const data = await graphqlRequest(query, { login: username });
+    if (!data.user) throw new Error("User not found");
+    return data.user.starredRepositories.edges
+      .filter(edge => {
+        const starred = new Date(edge.starredAt);
+        return starred >= new Date(since) && starred <= new Date(until);
+      })
+      .map(edge => ({ name: edge.node.name, owner: edge.node.owner.login, starredAt: edge.starredAt }));
+  } catch (e) {
+    return { error: e.message };
+  }
+}
+// Languages breakdown per repo and aggregate
+export async function getLanguagesBreakdown(username, year) {
+  const since = `${year}-01-01T00:00:00Z`;
+  const until = `${year}-12-31T23:59:59Z`;
+  const query = `
+    query($login: String!) {
+      user(login: $login) {
+        repositories(first: 100, ownerAffiliations: OWNER) {
+          nodes {
+            name
+            createdAt
+            languages(first: 10) {
+              nodes { name }
+            }
+          }
+        }
+      }
+    }
+  `;
+  try {
+    const data = await graphqlRequest(query, { login: username });
+    if (!data.user) throw new Error("User not found");
+    const breakdown = [];
+    const aggregate = {};
+    data.user.repositories.nodes.forEach(repo => {
+      const created = new Date(repo.createdAt);
+      if (created >= new Date(since) && created <= new Date(until)) {
+        const langs = repo.languages.nodes.map(lang => lang.name);
+        breakdown.push({ repo: repo.name, languages: langs });
+        langs.forEach(lang => {
+          aggregate[lang] = (aggregate[lang] || 0) + 1;
+        });
+      }
+    });
+    return { breakdown, aggregate };
+  } catch (e) {
+    return { error: e.message };
+  }
+}
+// Commit time analysis with timezone offset
+export async function getCommitTimeAnalysis(username, year, timezoneOffset = 0) {
+  const since = `${year}-01-01T00:00:00Z`;
+  const until = `${year}-12-31T23:59:59Z`;
+  // Step 1: Fetch all repo names for the user in the year
+  const reposQuery = `
+    query($login: String!) {
+      user(login: $login) {
+        repositories(first: 100, ownerAffiliations: OWNER) {
+          nodes {
+            name
+          }
+        }
+      }
+    }
+  `;
+  // Step 2: For each repo, fetch all commits in parallel
+  const commitsQuery = `
+    query($owner: String!, $name: String!, $since: GitTimestamp!, $until: GitTimestamp!, $after: String) {
+      repository(owner: $owner, name: $name) {
+        defaultBranchRef {
+          target {
+            ... on Commit {
+              history(since: $since, until: $until, first: 100, after: $after) {
+                pageInfo { hasNextPage endCursor }
+                nodes {
+                  committedDate
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  `;
+  try {
+    const reposData = await graphqlRequest(reposQuery, { login: username });
+    if (!reposData.user) throw new Error("User not found");
+    const repoNames = reposData.user.repositories.nodes.map(r => r.name);
+    const hourDist = Array(24).fill(0);
+    let night = 0, day = 0;
+    // Helper to fetch all commits for a repo using pagination
+    async function fetchAllCommitsForRepo(repoName) {
+      let commits = [];
+      let after = null;
+      let hasNextPage = true;
+      while (hasNextPage) {
+        const repoData = await graphqlRequest(commitsQuery, {
+          owner: username,
+          name: repoName,
+          since,
+          until,
+          after
+        });
+        const history = repoData.repository?.defaultBranchRef?.target?.history;
+        if (!history) break;
+        commits = commits.concat(history.nodes);
+        hasNextPage = history.pageInfo.hasNextPage;
+        after = history.pageInfo.endCursor;
+      }
+      return commits;
+    }
+    // Fetch all commits for all repos in parallel
+    const allCommitsArrays = await Promise.all(
+      repoNames.map(repoName => fetchAllCommitsForRepo(repoName))
+    );
+    // Flatten and process
+    allCommitsArrays.flat().forEach(commit => {
+      const date = new Date(commit.committedDate);
+      let hour = date.getUTCHours() + timezoneOffset;
+      if (hour < 0) hour += 24;
+      if (hour >= 24) hour -= 24;
+      hourDist[hour]++;
+      if (hour >= 6 && hour < 18) day++;
+      else night++;
+    });
+    return { hourDistribution: hourDist, nightOwl: night, earlyBird: day };
+  } catch (e) {
+    return { error: e.message };
+  }
+}
 const GITHUB_GRAPHQL_API = "https://api.github.com/graphql";
 const headers = {
   Authorization: `Bearer ${import.meta.env.VITE_GITHUB_TOKEN}`,
