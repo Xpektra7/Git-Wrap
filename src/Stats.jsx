@@ -11,6 +11,8 @@ import {
   getCommitTimeAnalysis,
 } from "./lib/github";
 import { useEffect, useState } from "react";
+import { Line } from 'react-chartjs-2';
+
 
 export default function Stats({ username, year }) {
   const [repos, setRepos] = useState(null);
@@ -87,6 +89,11 @@ export default function Stats({ username, year }) {
         subtitle={commitTimeAnalysis.nightOwl > commitTimeAnalysis.earlyBird
           ? `Early: ${commitTimeAnalysis.earlyBird}`
           : `Night: ${commitTimeAnalysis.nightOwl}`}
+      />
+
+      <Line
+        options={commitTimeAnalysis.hourDistribution.hour}
+        data={commitTimeAnalysis.hourDistribution.count}
       />
       {/* Languages Breakdown (custom display) */}
       <div className="col-span-1 md:col-span-3">
