@@ -1,4 +1,5 @@
 import StatCard from "./StatCard";
+import HourlyCommits from "./components/HourlyCommits";
 import {
   fetchRepos,
   getTotalCommits,
@@ -11,27 +12,8 @@ import {
   getCommitTimeAnalysis,
 } from "./lib/github";
 import { useEffect, useState } from "react";
-import {
-  Chart as ChartJS,
-  CategoryScale,
-  LinearScale,
-  PointElement,
-  LineElement,
-  Title,
-  Tooltip,
-  Legend,
-} from 'chart.js';
 
-ChartJS.register(
-  CategoryScale,
-  LinearScale,
-  PointElement,
-  LineElement,
-  Title,
-  Tooltip,
-  Legend
-);
-import { Line } from 'react-chartjs-2';
+
 export default function Stats({ username, year, theme }) {
   const [repos, setRepos] = useState(null);
   const [commitsInAYear, setCommitsInAYear] = useState(null);
@@ -151,40 +133,18 @@ export default function Stats({ username, year, theme }) {
         }
       />
 
-      <div className="w-full row-span-1 md:row-span-2 col-span-1 md:col-span-3">
-        {commitTimeAnalysis?.hourDistribution?.length === 24 ? (
-          <Line
-            data={{
-              labels: [...Array(24).keys()].map(
-                (h) => h.toString().padStart(2, "0") + ":00"
-              ),
-              datasets: [
-                {
-                  label: "Commits per Hour",
-                  data: commitTimeAnalysis.hourDistribution,
-                  fill: false,
-                  borderColor: `${theme === "light" ? '#000' : '#fff'}`,
-                  tension: 0.25,
-                  borderWidth: 2,
-                },
-              ],
-            }}
-            options={{ maintainAspectRatio: false }}
-          />
-        ) : (
-          <p>No hourly commit data available.</p>
-        )}
-      </div>
+      <HourlyCommits commitTimeAnalysis={commitTimeAnalysis} theme={theme} />
+
       {/* Languages Breakdown (custom display) */}
       <div className="col-span-1 md:col-span-3">
-        <h3 className="text-sm text-(--sub-text) mt-4">Languages Breakdown</h3>
+        {/* <h3 className="text-sm text-(--sub-text) mt-4">Languages Breakdown</h3>
         <ul className="text-xs">
           {languagesBreakdown.breakdown.map((repo, i) => (
             <li key={i}>
               <b>{repo.repo}:</b> {repo.languages.join(", ")}
             </li>
           ))}
-        </ul>
+        </ul> */}
         <h4 className="text-xs mt-2">Aggregate:</h4>
         <ul className="text-xs">
           {Object.entries(languagesBreakdown.aggregate).map(
