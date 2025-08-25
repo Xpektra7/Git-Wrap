@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import Stats from "./Stats";
 import UserNotFound from "./components/UserNotFound";
+import LandingPage from "./components/LandingPage";
 
 export default function App() {
   const [name, setName] = useState("");
@@ -49,7 +50,7 @@ export default function App() {
       {/* Body */}
 
 
-      {validUser === null && <p>Enter a GitHub username and click "Wrap" to see your yearly stats.</p>}
+      {validUser === null && <LandingPage />}
 
       {validUser === true && (
         <section className="flex flex-col gap-4 p-4 px-8 md:px-24">
