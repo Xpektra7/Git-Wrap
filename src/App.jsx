@@ -43,7 +43,7 @@ export default function App() {
         </button>
       </div>
 
-      {validUser === true && <Stats username={username} year={year} />}
+      {validUser === true && <Stats username={username} year={year} theme={theme} />}
       {validUser === false && <p>User not found.</p>}
     </main>
   );
