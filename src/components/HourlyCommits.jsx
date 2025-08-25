@@ -23,7 +23,7 @@ import { Line } from "react-chartjs-2";
 
 export default function HourlyCommits({ commitTimeAnalysis, theme }) {
   return (
-    <div className="w-full row-span-1 md:row-span-2 col-span-1 md:col-span-3">
+    <div className="w-full row-span-2 col-span-1">
       {commitTimeAnalysis?.hourDistribution?.length === 24 ? (
         <Line
           data={{
@@ -41,7 +41,12 @@ export default function HourlyCommits({ commitTimeAnalysis, theme }) {
               },
             ],
           }}
-          options={{ maintainAspectRatio: false }}
+          options={{
+            maintainAspectRatio: false,
+            plugins: {
+              legend: { display: false },
+            },
+          }}
         />
       ) : (
         <p>No hourly commit data available.</p>
