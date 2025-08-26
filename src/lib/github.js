@@ -1,4 +1,191 @@
 // Top languages used across user's repos for the year
+// ✅ Streaks — Longest commit streak vs longest break
+export async function getStreaks(username, year) {
+  const since = `${year}-01-01T00:00:00Z`;
+  const until = `${year}-12-31T23:59:59Z`;
+  const query = `
+    query($login: String!, $since: DateTime!, $until: DateTime!) {
+      user(login: $login) {
+        contributionsCollection(from: $since, to: $until) {
+          contributionCalendar {
+            weeks {
+              contributionDays {
+                date
+                contributionCount
+              }
+            }
+          }
+        }
+      }
+    }
+  `;
+  try {
+    const data = await graphqlRequest(query, { login: username, since, until });
+    if (!data.user) throw new Error("User not found");
+    const days = data.user.contributionsCollection.contributionCalendar.weeks.flatMap(w => w.contributionDays);
+    let maxStreak = 0, currentStreak = 0, maxBreak = 0, currentBreak = 0;
+    let prevCommit = false;
+    for (const day of days) {
+      if (day.contributionCount > 0) {
+        currentStreak++;
+        maxBreak = Math.max(maxBreak, currentBreak);
+        currentBreak = 0;
+        prevCommit = true;
+      } else {
+        currentBreak++;
+        maxStreak = Math.max(maxStreak, currentStreak);
+        currentStreak = 0;
+        prevCommit = false;
+      }
+    }
+    maxStreak = Math.max(maxStreak, currentStreak);
+    maxBreak = Math.max(maxBreak, currentBreak);
+    return { longestStreak: maxStreak, longestBreak: maxBreak };
+  } catch (e) {
+    return { error: e.message };
+  }
+}
+
+// ✅ Collaboration Count — PRs merged into other people’s repos
+export async function getCollaborationCount(username, year) {
+  const since = `${year}-01-01T00:00:00Z`;
+  const until = `${year}-12-31T23:59:59Z`;
+  const query = `
+    query($login: String!, $since: DateTime!, $until: DateTime!) {
+      user(login: $login) {
+        contributionsCollection(from: $since, to: $until) {
+          pullRequestContributionsByRepository {
+            repository {
+              owner { login }
+              name
+            }
+            contributions(first: 100) {
+              nodes {
+                pullRequest {
+                  merged
+                  author { login }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  `;
+  try {
+    const data = await graphqlRequest(query, { login: username, since, until });
+    if (!data.user) throw new Error("User not found");
+    let count = 0;
+    data.user.contributionsCollection.pullRequestContributionsByRepository.forEach(repo => {
+      repo.contributions.nodes.forEach(pr => {
+        if (pr.pullRequest.merged && pr.pullRequest.author?.login === username && repo.repository.owner.login !== username) {
+          count++;
+        }
+      });
+    });
+    return { collaborationCount: count };
+  } catch (e) {
+    return { error: e.message };
+  }
+}
+
+// ✅ Pull Requests — Opened vs merged PRs
+export async function getPullRequestsStats(username, year) {
+  const since = `${year}-01-01T00:00:00Z`;
+  const until = `${year}-12-31T23:59:59Z`;
+  const query = `
+    query($login: String!, $since: DateTime!, $until: DateTime!) {
+      user(login: $login) {
+        contributionsCollection(from: $since, to: $until) {
+          pullRequestContributions(first: 100) {
+            nodes {
+              pullRequest {
+                merged
+              }
+            }
+          }
+        }
+      }
+    }
+  `;
+  try {
+    const data = await graphqlRequest(query, { login: username, since, until });
+    if (!data.user) throw new Error("User not found");
+    const prs = data.user.contributionsCollection.pullRequestContributions.nodes;
+    const opened = prs.length;
+    const merged = prs.filter(pr => pr.pullRequest.merged).length;
+    return { opened, merged };
+  } catch (e) {
+    return { error: e.message };
+  }
+}
+
+// ✅ Activity Patterns — Days of the week and the no of commits made on those days
+export async function getActivityPatterns(username, year) {
+  const since = `${year}-01-01T00:00:00Z`;
+  const until = `${year}-12-31T23:59:59Z`;
+  const query = `
+    query($login: String!, $since: DateTime!, $until: DateTime!) {
+      user(login: $login) {
+        contributionsCollection(from: $since, to: $until) {
+          contributionCalendar {
+            weeks {
+              contributionDays {
+                date
+                contributionCount
+              }
+            }
+          }
+        }
+      }
+    }
+  `;
+  try {
+    const data = await graphqlRequest(query, { login: username, since, until });
+    if (!data.user) throw new Error("User not found");
+    const days = data.user.contributionsCollection.contributionCalendar.weeks.flatMap(w => w.contributionDays);
+    const weekDays = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
+    const pattern = Array(7).fill(0);
+    days.forEach(day => {
+      const d = new Date(day.date);
+      const idx = d.getDay();
+      pattern[idx] += day.contributionCount;
+    });
+    return weekDays.map((name, i) => ({ day: name, commits: pattern[i] }));
+  } catch (e) {
+    return { error: e.message };
+  }
+}
+
+// ✅ Followers Growth — New followers gained in the year
+export async function getFollowersGrowth(username, year) {
+  const since = `${year}-01-01T00:00:00Z`;
+  const until = `${year}-12-31T23:59:59Z`;
+  const query = `
+    query($login: String!) {
+      user(login: $login) {
+        followers(first: 100) {
+          nodes {
+            login
+            createdAt
+          }
+        }
+      }
+    }
+  `;
+  try {
+    const data = await graphqlRequest(query, { login: username });
+    if (!data.user) throw new Error("User not found");
+    const followers = data.user.followers.nodes.filter(f => {
+      if (!f.createdAt) return false;
+      const created = new Date(f.createdAt);
+      return created >= new Date(since) && created <= new Date(until);
+    });
+    return { newFollowers: followers.map(f => f.login), count: followers.length };
+  } catch (e) {
+    return { error: e.message };
+  }
+}
 export async function getTopLanguages(username, year) {
   const since = `${year}-01-01T00:00:00Z`;
   const until = `${year}-12-31T23:59:59Z`;
