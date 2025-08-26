@@ -4,8 +4,14 @@ export default function StatCard({
   subtitle,
   prevValue,
   prevSubtitle,
-  growth
+  growth,
 }) {
+  if (growth === "ignore") {
+    growth = "";
+  } else {
+    growth = `${growth > 0 ? "↑" : "↓"} ${Math.abs(growth)}%`;
+  }
+
   return (
     <div className=" flex flex-col rounded border border-(--border)">
       <div className="flex flex-col gap-4 p-4">
@@ -24,12 +30,8 @@ export default function StatCard({
                 - ({prevSubtitle})
               </span>
             )}
-
-            
           </p>
-          <p className="text-sm text-(--sub-text)">
-            {growth > 0 ? "↑" : "↓"} {Math.abs(growth)}%
-          </p>
+          <p className="text-sm text-(--sub-text)">{growth}</p>
         </div>
       )}
     </div>

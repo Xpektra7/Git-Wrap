@@ -40,7 +40,7 @@ export async function getStreaks(username, year) {
     }
     maxStreak = Math.max(maxStreak, currentStreak);
     maxBreak = Math.max(maxBreak, currentBreak);
-    return { longestStreak: maxStreak, longestBreak: maxBreak };
+    return { longestStreak: maxStreak, longestBreak: maxBreak, currentStreak: currentStreak };
   } catch (e) {
     return { error: e.message };
   }
