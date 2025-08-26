@@ -21,7 +21,7 @@ ChartJS.register(
 
 import { Line } from "react-chartjs-2";
 
-export default function HourlyCommits({ commitTimeAnalysis, theme }) {
+export default function HourlyCommits({ commitTimeAnalysis, prevCommitTimeAnalysis, theme , year, prevYear }) {
   return (
     <div className="w-full h-full row-span-1 md:row-span-2 col-span-1">
       {commitTimeAnalysis?.hourDistribution?.length === 24 ? (
@@ -32,13 +32,23 @@ export default function HourlyCommits({ commitTimeAnalysis, theme }) {
             ),
             datasets: [
               {
-                label: "Commits per Hour",
+                label: `Commits per Hour(${year})`,
                 data: commitTimeAnalysis.hourDistribution,
                 fill: false,
-                borderColor: `${theme === "light" ? "#0s00" : "#fff"}`,
+                borderColor: `${theme === "light" ? "#000" : "#fff"}`,
                 tension: 0.25,
                 borderWidth: 2,
                 pointBorderColor: `${theme === "light" ? "#000" : "#fff"}`,
+                
+              },
+              {
+                label: `Commits per Hour(${prevYear})`,
+                data: prevCommitTimeAnalysis.hourDistribution,
+                fill: false,
+                borderColor: `${theme === "light" ? "#b3b3b3" : "#4d4d4d"}`,
+                tension: 0.25,
+                borderWidth: 2,
+                pointBorderColor: `${theme === "light" ? "#b3b3b3" : "#4d4d4d"}`,
                 
               },
             ],

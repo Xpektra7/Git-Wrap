@@ -228,9 +228,9 @@ export default function Stats({ username, year, theme }) {
       </div>
 
       <div className="grid grid-cols-1 mt-8 h-120 md:h-60 grid-rows-2 md:grid-cols-2 gap-4">
-        <HourlyCommits commitTimeAnalysis={commitTimeAnalysis} theme={theme} />
+        <HourlyCommits commitTimeAnalysis={commitTimeAnalysis} prevCommitTimeAnalysis={prevCommitTimeAnalysis} theme={theme} year={year} prevYear={prevYear} />
 
-        <LanguageOverview
+        <LanguageOverview 
           languagesBreakdown={languagesBreakdown}
           theme={theme}
         />
