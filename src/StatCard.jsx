@@ -11,7 +11,7 @@ export default function StatCard({
       <div className="flex flex-col gap-4 p-4">
         <h2 className="text-sm text-(--sub-text)">{title}</h2>
         <div className="flex flex-wrap gap-2 items-baseline">
-          <p className="text-(--color) font-bold">{value ? value : "0"}</p>
+          <p className="text-(--color) font-bold">{value ? value : "..."}</p>
           {subtitle && <p className="text-sm text-(--sub-text)">{subtitle}</p>}
         </div>
       </div>

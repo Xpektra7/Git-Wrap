@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import Stats from "./Stats";
 import UserNotFound from "./components/UserNotFound";
+import LandingPage from "./components/LandingPage";
 
 export default function App() {
   const [name, setName] = useState("");
@@ -21,7 +22,7 @@ export default function App() {
     <main className="min-h-screen w-screen flex flex-col gap-8">
 
       {/* Header */}
-      <div className="flex w-full max-h-[10vh] justify-between p-4 px-8 md:px-16">
+      <div className="flex w-full max-h-[10vh] justify-between p-4 px-8 md:px-24">
         <div className="flex gap-4 items-center">
           <input
             type="text"
@@ -49,15 +50,15 @@ export default function App() {
       {/* Body */}
 
 
-      {validUser === null && <p>Enter a GitHub username and click "Wrap" to see your yearly stats.</p>}
+      {validUser === null && <LandingPage />}
 
       {validUser === true && (
-        <>
+        <section className="flex flex-col gap-4 p-4 px-8 md:px-24">
           <a href={`https://github.com/${username}`} target="_blank" rel="noopener noreferrer">
             View Profile
           </a>
           <Stats username={username} year={year} theme={theme} />
-        </>
+        </section>
       )}
       {validUser === false && <UserNotFound />}
     </main>
