@@ -13,6 +13,7 @@ import {
   getCommitTimeAnalysis,
   getStreaks,
   getCollaborationCount,
+  getActivityPatterns,
 } from "./lib/github";
 import { useEffect, useState } from "react";
 
