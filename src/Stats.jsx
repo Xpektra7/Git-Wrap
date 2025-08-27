@@ -91,6 +91,7 @@ export default function Stats({ username, year, theme }) {
     getCollaborationCount(username, prevYear).then(setPrevCollaborationCount);
   }, [username]);
 
+
   return (
     <div className="flex flex-col w-full gap-16">
 
