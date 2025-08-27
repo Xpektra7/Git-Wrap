@@ -40,7 +40,7 @@ export async function getStreaks(username, year) {
     }
     maxStreak = Math.max(maxStreak, currentStreak);
     maxBreak = Math.max(maxBreak, currentBreak);
-    return { longestStreak: maxStreak, longestBreak: maxBreak };
+    return { longestStreak: maxStreak, longestBreak: maxBreak, currentStreak: currentStreak };
   } catch (e) {
     return { error: e.message };
   }
@@ -121,7 +121,7 @@ export async function getPullRequestsStats(username, year) {
 }
 
 // ✅ Activity Patterns — Days of the week and the no of commits made on those days
-export async function getActivityPatterns(username, year) {
+export async function getActivityPatterns(username, year){
   const since = `${year}-01-01T00:00:00Z`;
   const until = `${year}-12-31T23:59:59Z`;
   const query = `

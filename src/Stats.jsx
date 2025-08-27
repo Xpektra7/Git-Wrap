@@ -11,29 +11,56 @@ import {
   getTopLanguages,
   getLanguagesBreakdown,
   getCommitTimeAnalysis,
+  getStreaks,
+  getCollaborationCount,
+  getActivityPatterns,
 } from "./lib/github";
 import { useEffect, useState } from "react";
 
 export default function Stats({ username, year, theme }) {
-  const [repos, setRepos] = useState(null);
-  const [commitsInAYear, setCommitsInAYear] = useState(null);
+  const [repos, setRepos] = useState(0);
+  const [commitsInAYear, setCommitsInAYear] = useState(0);
   const [activeRepo, setActiveRepo] = useState(null);
-  const [starsReceived, setStarsReceived] = useState(null);
-  const [starsGiven, setStarsGiven] = useState(null);
+  const [starsReceived, setStarsReceived] = useState(0);
+  const [starsGiven, setStarsGiven] = useState(0);
   const [topLanguages, setTopLanguages] = useState([]);
   const [languagesBreakdown, setLanguagesBreakdown] = useState({
     breakdown: [],
     aggregate: {},
   });
+  const [collaborationCount, setCollaborationCount] = useState(0);
   const [commitTimeAnalysis, setCommitTimeAnalysis] = useState({
     hourDistribution: Array(24).fill(0),
     nightOwl: 0,
     earlyBird: 0,
   });
   const [stars, setStars] = useState(null); // legacy
-  const [prevRepos, setPrevRepos] = useState(null);
-  const [prevCommitsInAYear, setPrevCommitsInAYear] = useState(null);
+  const [streakInfo,setStreakInfo] = useState({
+    longestStreak: 0,
+    longestBreak: 0,
+    currentStreak: 0
+  });
+  const [prevRepos, setPrevRepos] = useState(0);
+  const [prevCommitsInAYear, setPrevCommitsInAYear] = useState(0);
   const [prevActiveRepo, setPrevActiveRepo] = useState(null);
+  const [prevStarsReceived, setPrevStarsReceived] = useState(0);
+  const [prevStarsGiven, setPrevStarsGiven] = useState(0);
+  const [prevTopLanguages, setPrevTopLanguages] = useState([]);
+  const [prevLanguagesBreakdown, setPrevLanguagesBreakdown] = useState({
+    breakdown: [],
+    aggregate: {},
+  });
+  const [prevCollaborationCount, setPrevCollaborationCount] = useState(0);
+  const [prevCommitTimeAnalysis, setPrevCommitTimeAnalysis] = useState({
+    hourDistribution: Array(24).fill(0),
+    nightOwl: 0,
+    earlyBird: 0,
+  });
+  const [prevStreakInfo,setPrevStreakInfo] = useState({
+    longestStreak: 0,
+    longestBreak: 0,
+    currentStreak: 0
+  });
 
   const prevYear = year - 1;
 
@@ -53,11 +80,24 @@ export default function Stats({ username, year, theme }) {
     getTopLanguages(username, year).then(setTopLanguages);
     getLanguagesBreakdown(username, year).then(setLanguagesBreakdown);
     getCommitTimeAnalysis(username, year).then(setCommitTimeAnalysis);
+    getStreaks(username, year).then(setStreakInfo);
+    getCollaborationCount(username, year).then(setCollaborationCount);
+    getStarsReceived(username, prevYear).then(setPrevStarsReceived);
+    getStarsGiven(username, prevYear).then(setPrevStarsGiven);
+    getTopLanguages(username, prevYear).then(setPrevTopLanguages);
+    getLanguagesBreakdown(username, prevYear).then(setPrevLanguagesBreakdown);
+    getCommitTimeAnalysis(username, prevYear).then(setPrevCommitTimeAnalysis);
+    getStreaks(username, prevYear).then(setPrevStreakInfo);
+    getCollaborationCount(username, prevYear).then(setPrevCollaborationCount);
   }, [username]);
 
   return (
-    <div classname="flex flex-col w-full gap-16">
+    <div className="flex flex-col w-full gap-16">
+
+      {/* Basic Stats Grid */}
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+
+        {/* Repos Created in that year */}
         <StatCard
           title={`Repos Created in ${year}`}
           value={repos ? repos.length : 0}
@@ -70,6 +110,7 @@ export default function Stats({ username, year, theme }) {
               : 0
           }
         />
+        {/* Total Commits in that year*/}
         <StatCard
           title={`Total Commits in ${year}`}
           value={commitsInAYear}
@@ -83,6 +124,7 @@ export default function Stats({ username, year, theme }) {
               : 0
           }
         />
+        {/* Most Active Repo */}
         <StatCard
           title="Most Active Repo"
           value={activeRepo?.repo || "No activity"}
@@ -103,25 +145,51 @@ export default function Stats({ username, year, theme }) {
               : 0
           }
         />
+        {/* Collaboration */}
         <StatCard
-          title="Stars Received"
-          value={starsReceived?.error ? starsReceived.error : starsReceived}
-        />
-        <StatCard
-          title="Stars Given"
-          value={
-            Array.isArray(starsGiven)
-              ? starsGiven.length
-              : starsGiven?.error || 0
+          title="Collaborations"
+          value={collaborationCount.collaborationCount || 0}
+          prevValue={prevCollaborationCount.collaborationCount || 0}
+          growth={
+            prevCollaborationCount.collaborationCount !== 0
+              ? Math.round(
+                  ((collaborationCount.collaborationCount -
+                    prevCollaborationCount.collaborationCount) /
+                    prevCollaborationCount.collaborationCount) *
+                    100
+                )
+              : 0
           }
         />
+        {/* Top Language*/}
         <StatCard
-          title="Top Languages"
+          title="Top Language"
           value={topLanguages.length > 0 ? topLanguages[0].name : "None"}
           subtitle={
             topLanguages.length > 0 ? `${topLanguages[0].count} repos` : ""
           }
+          prevValue={
+            prevTopLanguages.length > 0 ? prevTopLanguages[0].name : "None"
+          }
+          prevSubtitle={
+            prevTopLanguages.length > 0 ? `${prevTopLanguages[0].count} repos` : ""
+          }
+          growth='ignore'
         />
+          {/* Stars */}
+          <StatCard
+            title="Stars"
+            value={`Received: ${starsReceived?.error ? starsReceived.error : starsReceived}`}
+            subtitle={`Given: ${Array.isArray(starsGiven)
+                ? starsGiven.length
+                : starsGiven?.error || 0}`}
+            prevValue={`Received: ${prevStarsReceived?.error ? prevStarsReceived.error : prevStarsReceived}`}
+            prevSubtitle={`Given: ${Array.isArray(prevStarsGiven)
+                ? prevStarsGiven.length
+                : prevStarsGiven?.error || 0}`}
+            growth='ignore'
+          />
+        {/* Night Owl vs Early Bird */}
         <StatCard
           title="Night Owl vs Early Bird"
           value={
@@ -134,13 +202,36 @@ export default function Stats({ username, year, theme }) {
               ? `Early: ${commitTimeAnalysis.earlyBird}`
               : `Night: ${commitTimeAnalysis.nightOwl}`
           }
+          prevValue={
+            prevCommitTimeAnalysis.nightOwl > prevCommitTimeAnalysis.earlyBird
+              ? `Night: ${prevCommitTimeAnalysis.nightOwl}`
+              : `Early: ${prevCommitTimeAnalysis.earlyBird}`
+          }
+          prevSubtitle={
+            prevCommitTimeAnalysis.nightOwl > prevCommitTimeAnalysis.earlyBird
+              ? `Early: ${prevCommitTimeAnalysis.earlyBird}`
+              : `Night: ${prevCommitTimeAnalysis.nightOwl}`
+          }
+          growth='ignore'
         />
+
+        {/* Streaks */}
+        <StatCard
+          title="Streaks"
+          value={`Longest Streak: ${streakInfo.longestStreak || 0}`}
+          subtitle={`Longest Break: ${streakInfo.longestBreak || 0}`}
+          prevValue={`Longest Streak: ${prevStreakInfo.longestStreak || 0}`}
+          prevSubtitle={`Longest Break: ${prevStreakInfo.longestBreak || 0}`}
+          growth='ignore'
+        />
+
+
       </div>
 
       <div className="grid grid-cols-1 mt-8 h-120 md:h-60 grid-rows-2 md:grid-cols-2 gap-4">
-        <HourlyCommits commitTimeAnalysis={commitTimeAnalysis} theme={theme} />
+        <HourlyCommits commitTimeAnalysis={commitTimeAnalysis} prevCommitTimeAnalysis={prevCommitTimeAnalysis} theme={theme} year={year} prevYear={prevYear} />
 
-        <LanguageOverview
+        <LanguageOverview 
           languagesBreakdown={languagesBreakdown}
           theme={theme}
         />
