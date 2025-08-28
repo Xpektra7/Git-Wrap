@@ -1,4 +1,5 @@
 import StatCard from "./StatCard";
+import DailyCommits from "./components/DailyCommits";
 import HourlyCommits from "./components/HourlyCommits";
 import LanguageOverview from "./components/LanguagesOverview";
 import {
@@ -238,6 +239,8 @@ export default function Stats({ username, year, theme }) {
 
       <div className="grid grid-cols-1 mt-8 h-120 md:h-60 grid-rows-2 md:grid-cols-2 gap-4">
         <HourlyCommits commitTimeAnalysis={commitTimeAnalysis} prevCommitTimeAnalysis={prevCommitTimeAnalysis} theme={theme} year={year} prevYear={prevYear} />
+
+        <DailyCommits username={username} theme={theme} year={year} />
 
         <LanguageOverview 
           username={username}
