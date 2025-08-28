@@ -13,7 +13,7 @@ import {
   getCommitTimeAnalysis,
   getStreaks,
   getCollaborationCount,
-  getActivityPatterns,
+  getPullRequestsStats
 } from "./lib/github";
 import { useEffect, useState } from "react";
 
@@ -40,16 +40,14 @@ export default function Stats({ username, year, theme }) {
     longestBreak: 0,
     currentStreak: 0
   });
+  const [pullRequestStats, setPullRequestStats] = useState({ });
+  const [prevPullRequestStats, setPrevPullRequestStats] = useState({ });
   const [prevRepos, setPrevRepos] = useState(0);
   const [prevCommitsInAYear, setPrevCommitsInAYear] = useState(0);
   const [prevActiveRepo, setPrevActiveRepo] = useState(null);
   const [prevStarsReceived, setPrevStarsReceived] = useState(0);
   const [prevStarsGiven, setPrevStarsGiven] = useState(0);
   const [prevTopLanguages, setPrevTopLanguages] = useState([]);
-  const [prevLanguagesBreakdown, setPrevLanguagesBreakdown] = useState({
-    breakdown: [],
-    aggregate: {},
-  });
   const [prevCollaborationCount, setPrevCollaborationCount] = useState(0);
   const [prevCommitTimeAnalysis, setPrevCommitTimeAnalysis] = useState({
     hourDistribution: Array(24).fill(0),
@@ -78,17 +76,17 @@ export default function Stats({ username, year, theme }) {
     getStarsReceived(username, year).then(setStarsReceived);
     getStarsGiven(username, year).then(setStarsGiven);
     getTopLanguages(username, year).then(setTopLanguages);
-    getLanguagesBreakdown(username, year).then(setLanguagesBreakdown);
     getCommitTimeAnalysis(username, year).then(setCommitTimeAnalysis);
     getStreaks(username, year).then(setStreakInfo);
     getCollaborationCount(username, year).then(setCollaborationCount);
+    getPullRequestsStats(username, year).then(setPullRequestStats);
     getStarsReceived(username, prevYear).then(setPrevStarsReceived);
     getStarsGiven(username, prevYear).then(setPrevStarsGiven);
     getTopLanguages(username, prevYear).then(setPrevTopLanguages);
-    getLanguagesBreakdown(username, prevYear).then(setPrevLanguagesBreakdown);
     getCommitTimeAnalysis(username, prevYear).then(setPrevCommitTimeAnalysis);
     getStreaks(username, prevYear).then(setPrevStreakInfo);
     getCollaborationCount(username, prevYear).then(setPrevCollaborationCount);
+    getPullRequestsStats(username, prevYear).then(setPrevPullRequestStats);
   }, [username]);
 
 
@@ -162,6 +160,15 @@ export default function Stats({ username, year, theme }) {
               : 0
           }
         />
+        {/* Pull requests vs Merged */}
+        <StatCard
+          title="Pull Requests"
+          value={`${pullRequestStats.opened || 0}`}
+          subtitle={`Merged: ${pullRequestStats.merged || 0}`}
+          prevValue={`${prevPullRequestStats.opened || 0}`}
+          prevSubtitle={`Merged: ${prevPullRequestStats.merged || 0}`}
+          growth='ignore'
+        />
         {/* Top Language*/}
         <StatCard
           title="Top Language"
@@ -233,7 +240,8 @@ export default function Stats({ username, year, theme }) {
         <HourlyCommits commitTimeAnalysis={commitTimeAnalysis} prevCommitTimeAnalysis={prevCommitTimeAnalysis} theme={theme} year={year} prevYear={prevYear} />
 
         <LanguageOverview 
-          languagesBreakdown={languagesBreakdown}
+          username={username}
+          year={year}
           theme={theme}
         />
       </div>

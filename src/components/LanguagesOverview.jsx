@@ -18,8 +18,19 @@ ChartJS.register(
 );
 
 import { Bar } from "react-chartjs-2";
+import { getLanguagesBreakdown } from "../lib/github";
+import { useEffect, useState } from "react";
 
-export default function LanguageOverview({ languagesBreakdown, theme }) {
+export default function LanguageOverview({username,year, theme}) {
+
+  const [languagesBreakdown, setLanguagesBreakdown] = useState();
+
+  // Fetch languages breakdown data
+  useEffect(() => {
+    getLanguagesBreakdown(username,year).then(setLanguagesBreakdown);
+  }, []);
+
+
   const aggregate = languagesBreakdown?.aggregate || {};
 
   // Get entries, sort by commits (desc), take top 6, but restore original order
