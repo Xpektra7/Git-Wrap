@@ -35,14 +35,14 @@ export default function DailyCommits({ username, theme , year,}) {
 
   return (
     <div className="w-full h-full row-span-1 md:row-span-2 col-span-1">
-      {commitTimeAnalysis && commitTimeAnalysis.length === 7 ? (
+      {(commitTimeAnalysis && prevCommitTimeAnalysis) && (commitTimeAnalysis.length === 7 ? (
         <Line
           data={{
             labels: commitTimeAnalysis.map(day => day.day),
             datasets: [
               {
-                label: `Commits per Hour(${year})`,
-                data: commitTimeAnalysis.map(day => day.commits),
+                label: `Commits per Day (${year})`,
+                data: commitTimeAnalysis.map(day => {return day.commits}),
                 fill: false,
                 borderColor: `${theme === "light" ? "#000" : "#fff"}`,
                 tension: 0.25,
@@ -51,8 +51,8 @@ export default function DailyCommits({ username, theme , year,}) {
                 
               },
               {
-                label: `Commits per Hour(${year -1})`,
-                data: prevCommitTimeAnalysis.map(day => day.commits),
+                label: `Commits per Day (${year -1})`,
+                data: prevCommitTimeAnalysis.map(day => {return day.commits}),
                 fill: false,
                 borderColor: `${theme === "light" ? "#b3b3b3" : "#4d4d4d"}`,
                 tension: 0.25,
@@ -70,8 +70,8 @@ export default function DailyCommits({ username, theme , year,}) {
           }}
         />
       ) : (
-        <p>No hourly commit data available.</p>
-      )}
+        <p>No daily commit data available.</p>
+      ))}
     </div>
   );
 }
