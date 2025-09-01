@@ -26,9 +26,7 @@ export default function StatCard({
           <p className="text-sm text-(--sub-text)">
             {prevValue}
             {prevSubtitle && (
-              <span className="text-sm text-(--sub-text)">
-                - ({prevSubtitle})
-              </span>
+              <span className="text-sm text-(--sub-text) ml-2">{prevSubtitle}</span>
             )}
           </p>
           <p className="text-sm text-(--sub-text)">{growth}</p>
