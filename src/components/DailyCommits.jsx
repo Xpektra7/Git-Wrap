@@ -21,19 +21,28 @@ ChartJS.register(
 
 import { Line } from "react-chartjs-2";
 
-export default function HourlyCommits({ commitTimeAnalysis, prevCommitTimeAnalysis, theme , year, prevYear }) {
+import { getActivityPatterns } from "../lib/github";
+import { useEffect , useState} from "react";
+
+export default function DailyCommits({ username, theme , year,}) {
+    const [commitTimeAnalysis, setCommitTimeAnalysis] = useState();
+    const [prevCommitTimeAnalysis, setPrevCommitTimeAnalysis] = useState();
+
+    useEffect(() => {
+      getActivityPatterns(username, year).then(setCommitTimeAnalysis);
+      getActivityPatterns(username, year - 1).then(setPrevCommitTimeAnalysis);
+    }, [username, year]);
+
   return (
     <div className="w-full h-full row-span-1 md:row-span-2 col-span-1">
-      {commitTimeAnalysis?.hourDistribution?.length === 24 ? (
+      {(commitTimeAnalysis && prevCommitTimeAnalysis) && (commitTimeAnalysis.length === 7 ? (
         <Line
           data={{
-            labels: [...Array(24).keys()].map(
-              (h) => h.toString().padStart(2, "0") + ":00"
-            ),
+            labels: commitTimeAnalysis.map(day => day.day),
             datasets: [
               {
-                label: `Commits per Hour (${year})`,
-                data: commitTimeAnalysis.hourDistribution,
+                label: `Commits per Day (${year})`,
+                data: commitTimeAnalysis.map(day => {return day.commits}),
                 fill: false,
                 borderColor: `${theme === "light" ? "#000" : "#fff"}`,
                 tension: 0.25,
@@ -42,8 +51,8 @@ export default function HourlyCommits({ commitTimeAnalysis, prevCommitTimeAnalys
                 
               },
               {
-                label: `Commits per Hour (${prevYear})`,
-                data: prevCommitTimeAnalysis.hourDistribution,
+                label: `Commits per Day (${year -1})`,
+                data: prevCommitTimeAnalysis.map(day => {return day.commits}),
                 fill: false,
                 borderColor: `${theme === "light" ? "#b3b3b3" : "#4d4d4d"}`,
                 tension: 0.25,
@@ -61,8 +70,8 @@ export default function HourlyCommits({ commitTimeAnalysis, prevCommitTimeAnalys
           }}
         />
       ) : (
-        <p>No hourly commit data available.</p>
-      )}
+        <p>No daily commit data available.</p>
+      ))}
     </div>
   );
 }

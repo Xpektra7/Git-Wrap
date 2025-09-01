@@ -27,7 +27,7 @@ body{
     font-family: "Satoshi", sans-serif;
     transition: all 0.3s ease-in-out;
     background-color: var(--background-color);
-    color: #b3b3b3;
+    color: var(--color);
     border-color: var(--border);
 
 }
