@@ -57,7 +57,7 @@ export default function LanguageOverview({username,year, theme}) {
               {
                 label: "Repos per Language",
                 data: Object.values(filtered),
-                backgroundColor: theme === "light" ? "#000" : "#fff",
+                backgroundColor: theme === "light" ? "#000" : "#e3e3e3",
                 borderRadius: '7',
               },
             ],

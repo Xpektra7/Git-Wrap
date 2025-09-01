@@ -32,7 +32,7 @@ export default function HourlyCommits({ commitTimeAnalysis, prevCommitTimeAnalys
             ),
             datasets: [
               {
-                label: `Commits per Hour(${year})`,
+                label: `Commits per Hour (${year})`,
                 data: commitTimeAnalysis.hourDistribution,
                 fill: false,
                 borderColor: `${theme === "light" ? "#000" : "#fff"}`,
@@ -42,7 +42,7 @@ export default function HourlyCommits({ commitTimeAnalysis, prevCommitTimeAnalys
                 
               },
               {
-                label: `Commits per Hour(${prevYear})`,
+                label: `Commits per Hour (${prevYear})`,
                 data: prevCommitTimeAnalysis.hourDistribution,
                 fill: false,
                 borderColor: `${theme === "light" ? "#b3b3b3" : "#4d4d4d"}`,
