@@ -83,7 +83,7 @@ export async function getCollaborationCount(username, year) {
         }
       });
     });
-    return { collaborationCount: count };
+    return count ;
   } catch (e) {
     return { error: e.message };
   }
