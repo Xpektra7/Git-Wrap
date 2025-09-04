@@ -48,6 +48,7 @@ export default function App() {
               type="text"
               className="outline-none rounded border border-(--border) w-40 p-1 px-2 text-sm"
               onChange={(e) => setName(e.target.value)}
+              value={username}
             />
             <button
               type="submit"
