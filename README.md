@@ -37,7 +37,9 @@ It highlights your coding journey — commits, pull requests, issues, stars, rep
 - [x] GraphQL integration for richer data  
 - [ ] Caching & offline support  
 - [x] Dark mode + theme switcher  
-- [ ] Export stats as shareable social cards  
+- [ ] Export stats as shareable social cards
+    - [ ] Server Side Image generation
+    - [ ] Client side capture
 
 ---
 
