@@ -113,6 +113,7 @@ export default function Stats({ username, year, theme }) {
 
         {/* Repos Created in that year */}
         <StatCard
+          username={username}
           title={`Repos Created in ${year}`}
           value={repos ? repos.length : 0}
           prevValue={prevRepos ? prevRepos.length : 0}
@@ -126,6 +127,7 @@ export default function Stats({ username, year, theme }) {
         />
         {/* Total Commits in that year*/}
         <StatCard
+          username={username}
           title={`Total Commits in ${year}`}
           value={commitsInAYear}
           prevValue={prevCommitsInAYear}
@@ -140,6 +142,7 @@ export default function Stats({ username, year, theme }) {
         />
         {/* Most Active Repo */}
         <StatCard
+          username={username}
           title="Most Active Repo"
           value={activeRepo?.repo || "No activity"}
           subtitle={activeRepo ? `${activeRepo.commits} commits` : "Loading..."}
@@ -161,6 +164,7 @@ export default function Stats({ username, year, theme }) {
         />
         {/* Collaboration */}
         <StatCard
+          username={username}
           title="Collaborations"
           value={collaborationCount || 0}
           prevValue={prevCollaborationCount || 0}
@@ -177,6 +181,7 @@ export default function Stats({ username, year, theme }) {
         />
         {/* Pull requests vs Merged */}
         <StatCard
+          username={username}
           title="Pull Requests"
           value={`${pullRequestStats.opened || 0}`}
           subtitle={`Merged: ${pullRequestStats.merged || 0}`}
@@ -186,6 +191,7 @@ export default function Stats({ username, year, theme }) {
         />
         {/* Top Language*/}
         <StatCard
+          username={username}
           title="Top Language"
           value={topLanguages.length > 0 ? topLanguages[0].name : "None"}
           subtitle={
@@ -201,6 +207,7 @@ export default function Stats({ username, year, theme }) {
         />
           {/* Stars */}
           <StatCard
+            username={username}
             title="Stars"
             value={`Received: ${starsReceived?.error ? starsReceived.error : starsReceived}`}
             subtitle={`Given: ${Array.isArray(starsGiven)
@@ -214,6 +221,7 @@ export default function Stats({ username, year, theme }) {
           />
         {/* Night Owl vs Early Bird */}
         <StatCard
+          username={username}
           title="Night Owl vs Early Bird"
           value={
             commitTimeAnalysis.nightOwl > commitTimeAnalysis.earlyBird
@@ -240,6 +248,7 @@ export default function Stats({ username, year, theme }) {
 
         {/* Streaks */}
         <StatCard
+          username={username}
           title="Streaks"
           value={`Longest Streak: ${streakInfo.longestStreak || 0}`}
           subtitle={`Longest Break: ${streakInfo.longestBreak || 0}`}
@@ -249,7 +258,8 @@ export default function Stats({ username, year, theme }) {
         />
 
         {/* Followers */}
-        <StatCard 
+        <StatCard
+          username={username} 
           title="Followers"
           value={followers.count}
           prevValue={prevFollowers.count}
