@@ -3,6 +3,7 @@ import shareStat from "./lib/social";
 import SocialCard from "./components/SocialCard";
 
 export default function StatCard({
+  username,
   title,
   value,
   subtitle,
@@ -61,7 +62,7 @@ export default function StatCard({
           <p className="text-sm text-(--sub-text)">{displayGrowth}</p>
         </div>
       )}
-      <SocialCard title={title} value={value} subtitle={subtitle} />
+      <SocialCard username={username} title={title} value={value} subtitle={subtitle} />
     </div>
   );
 }
