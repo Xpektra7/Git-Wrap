@@ -162,14 +162,14 @@ export default function Stats({ username, year, theme }) {
         {/* Collaboration */}
         <StatCard
           title="Collaborations"
-          value={collaborationCount.collaborationCount || 0}
-          prevValue={prevCollaborationCount.collaborationCount || 0}
+          value={collaborationCount || 0}
+          prevValue={prevCollaborationCount || 0}
           growth={
-            prevCollaborationCount.collaborationCount !== 0
+            prevCollaborationCount !== 0
               ? Math.round(
-                  ((collaborationCount.collaborationCount -
-                    prevCollaborationCount.collaborationCount) /
-                    prevCollaborationCount.collaborationCount) *
+                  ((collaborationCount -
+                    prevCollaborationCount) /
+                    prevCollaborationCount) *
                     100
                 )
               : 0

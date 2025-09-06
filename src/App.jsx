@@ -39,7 +39,7 @@ export default function App() {
   };
 
   return (
-    <main className="min-h-screen w-screen flex flex-col gap-8">
+    <main className="relative bg-(--background-color) min-h-screen w-screen flex flex-col gap-8">
       {/* Header */}
       <div className="flex w-full max-h-[10vh] justify-between p-4 px-8 md:px-24">
         <div className="flex gap-4 items-center">
@@ -48,7 +48,6 @@ export default function App() {
               type="text"
               className="outline-none rounded border border-(--border) w-40 p-1 px-2 text-sm"
               onChange={(e) => setName(e.target.value)}
-              value={username}
             />
             <button
               type="submit"
