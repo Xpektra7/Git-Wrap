@@ -244,6 +244,7 @@ export default function Stats({ username, year, theme }) {
               : `Night: ${prevCommitTimeAnalysis.nightOwl}`
           }
           growth='ignore'
+          extra={[commitTimeAnalysis.difference, commitTimeAnalysis.type]}
         />
 
         {/* Streaks */}
