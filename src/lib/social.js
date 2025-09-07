@@ -1,14 +1,14 @@
-import { toJpeg } from "html-to-image";
+import { toPng } from "html-to-image";
 
-export default async function shareStat(node,title) {
+export default async function shareStat(node, title) {
   if (!node.lastElementChild) return;
 
   try {
-    const dataUrl = await toJpeg(node.lastElementChild, {
-      quality: 0.95,
+    const dataUrl = await toPng(node.lastElementChild, {
+      quality: 1.0,
+      pixelRatio: 6, // ⬅️ Boost resolution (default = 1)
       backgroundColor: getComputedStyle(document.body).backgroundColor,
       style: {
-        // Force Tailwind CSS variables to render
         "--color": getComputedStyle(document.body).getPropertyValue("--color"),
         "--border": getComputedStyle(document.body).getPropertyValue("--border"),
         "--background-color": getComputedStyle(document.body).getPropertyValue("--background-color"),
@@ -17,7 +17,7 @@ export default async function shareStat(node,title) {
     });
 
     const link = document.createElement("a");
-    link.download = `${title}.jpeg`;
+    link.download = `${title}.png`;
     link.href = dataUrl;
     link.click();
   } catch (err) {

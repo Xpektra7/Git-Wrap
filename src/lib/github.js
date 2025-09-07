@@ -408,7 +408,7 @@ export async function getCommitTimeAnalysis(username, year, timezoneOffset = 0) 
       if (hour >= 6 && hour < 18) day++;
       else night++;
     });
-    return { hourDistribution: hourDist, nightOwl: night, earlyBird: day };
+    return { hourDistribution: hourDist, nightOwl: night, earlyBird: day,difference : night > day ? ((night/(night + day)) * 100).toFixed(1) : ((day/(night + day)) * 100).toFixed(1), type: night > day ? "at night" : "during the day" };
   } catch (e) {
     return { error: e.message };
   }
