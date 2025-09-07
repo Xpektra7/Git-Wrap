@@ -10,6 +10,7 @@ export default function StatCard({
   prevValue,
   prevSubtitle,
   growth,
+  extra,
 }) {
   const cardRef = useRef(null);
 
@@ -62,7 +63,7 @@ export default function StatCard({
           <p className="text-sm text-(--sub-text)">{displayGrowth}</p>
         </div>
       )}
-      <SocialCard username={username} title={title} value={value} subtitle={subtitle} />
+      <SocialCard username={username} title={title} value={value} subtitle={subtitle} extra={extra} />
     </div>
   );
 }
