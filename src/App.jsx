@@ -3,6 +3,7 @@ import { useSearchParams } from "react-router-dom";
 import Stats from "./Stats";
 import UserNotFound from "./components/UserNotFound";
 import LandingPage from "./components/LandingPage";
+import MetaTags from "./components/MetaTags";
 import { getUserProfile } from "./lib/github";
 
 export default function App() {
@@ -32,6 +33,11 @@ export default function App() {
 
   return (
     <main className="relative bg-(--background-color) min-h-screen w-screen flex flex-col gap-8">
+      {/* Dynamic Meta Tags for landing page and error states */}
+      {(!username || username === "invalid") && (
+        <MetaTags username={username === "invalid" ? "invalid" : null} />
+      )}
+      
       {/* Header */}
       <div className="flex w-full max-h-[10vh] justify-between p-4 px-8 md:px-24">
         <div className="flex gap-4 items-center">
