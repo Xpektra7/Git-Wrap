@@ -71,7 +71,9 @@ export default function Stats({ username, year, theme }) {
 
   useEffect(() => {
     // Fetch user profile
-    getUserProfile(username).then(setUserProfile);
+    getUserProfile(username)
+      .then(setUserProfile)
+      .catch((error) => setUserProfile({ error: error.message || "Failed to fetch profile" }));
     
     // Fetch repos
     fetchRepos(username, year).then(setRepos);

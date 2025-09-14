@@ -18,17 +18,8 @@ export default function App() {
       setValidUser(null);
       return;
     }
-    (async () => {
-      try {
-        const profile = await getUserProfile(username);
-        setValidUser(!profile.error);
-        if (profile.error) setSearchParams({ username: "invalid" });
-      } catch {
-        setValidUser(false);
-        setSearchParams({ username: "invalid" });
-      }
-    })();
-  }, [username, setSearchParams]);
+    setValidUser(true);
+  }, [username]);
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -84,7 +75,7 @@ export default function App() {
         {!username && <LandingPage />}
         {username === "invalid" && <UserNotFound  />}
         {username && validUser && username !== "guest" && (
-          <Stats username={username} year={new Date().getFullYear()} theme={theme} />
+          <Stats username={username} year={new Date().getFullYear()} theme={theme} setSearchParams={setSearchParams} />
         )}
       </div>
     </main>

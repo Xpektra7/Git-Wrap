@@ -42,7 +42,7 @@ export async function getStreaks(username, year) {
     maxBreak = Math.max(maxBreak, currentBreak);
     return { longestStreak: maxStreak, longestBreak: maxBreak, currentStreak: currentStreak };
   } catch (e) {
-    return { error: e.message };
+    return { error: "An error occurred. Please try again later." };
   }
 }
 

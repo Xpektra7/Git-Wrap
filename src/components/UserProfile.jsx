@@ -35,6 +35,10 @@ export default function UserProfile({ userProfile, username }) {
           src={userProfile.avatarUrl} 
           alt={`${userProfile.name || username}'s avatar`}
           className="w-20 h-20 rounded-full border-2 border-(--border)"
+          onError={e => {
+            e.target.onerror = null;
+            e.target.src = "https://ui-avatars.com/api/?name=" + encodeURIComponent(userProfile.name || username);
+          }}
         />
         <div className="flex flex-col gap-2 flex-1">
           <div>
