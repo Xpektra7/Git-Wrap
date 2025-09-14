@@ -521,3 +521,36 @@ export async function starGrazer(username) {
   const data = await graphqlRequest(query, { login: username });
   return data.user.repositories.nodes.reduce((acc, repo) => acc + repo.stargazerCount, 0);
 }
+
+export async function getUserProfile(username) {
+  const query = `
+    query($login: String!) {
+      user(login: $login) {
+        name
+        avatarUrl
+        websiteUrl
+        twitterUsername
+        socialAccounts(first: 10) {
+          nodes {
+            provider
+            url
+            displayName
+          }
+        }
+      }
+    }
+  `;
+  try {
+    const data = await graphqlRequest(query, { login: username });
+    if (!data.user) throw new Error("User not found");
+    return {
+      name: data.user.name,
+      avatarUrl: data.user.avatarUrl,
+      websiteUrl: data.user.websiteUrl,
+      twitterUsername: data.user.twitterUsername,
+      socialAccounts: data.user.socialAccounts.nodes || []
+    };
+  } catch (e) {
+    return { error: e.message };
+  }
+}

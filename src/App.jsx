@@ -3,6 +3,7 @@ import { useSearchParams } from "react-router-dom";
 import Stats from "./Stats";
 import UserNotFound from "./components/UserNotFound";
 import LandingPage from "./components/LandingPage";
+import { getUserProfile } from "./lib/github";
 
 export default function App() {
   const [name, setName] = useState("");
@@ -19,9 +20,9 @@ export default function App() {
     }
     (async () => {
       try {
-        const res = await fetch(`https://api.github.com/users/${username}`);
-        setValidUser(res.ok);
-        if (!res.ok) setSearchParams({ username: "invalid" });
+        const profile = await getUserProfile(username);
+        setValidUser(!profile.error);
+        if (profile.error) setSearchParams({ username: "invalid" });
       } catch {
         setValidUser(false);
         setSearchParams({ username: "invalid" });

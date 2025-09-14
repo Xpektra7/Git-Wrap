@@ -2,6 +2,7 @@ import StatCard from "./StatCard";
 import DailyCommits from "./components/DailyCommits";
 import HourlyCommits from "./components/HourlyCommits";
 import LanguageOverview from "./components/LanguagesOverview";
+import UserProfile from "./components/UserProfile";
 import {
   fetchRepos,
   getTotalCommits,
@@ -15,10 +16,14 @@ import {
   getCollaborationCount,
   getPullRequestsStats,
   getFollowersGrowth,
+  getUserProfile,
 } from "./lib/github";
 import { useEffect, useState } from "react";
 
 export default function Stats({ username, year, theme }) {
+  // User Profile State
+  const [userProfile, setUserProfile] = useState(null);
+  
   // Current Year States
   const [repos, setRepos] = useState(0);
   const [commitsInAYear, setCommitsInAYear] = useState(0);
@@ -65,6 +70,9 @@ export default function Stats({ username, year, theme }) {
   const prevYear = year - 1;
 
   useEffect(() => {
+    // Fetch user profile
+    getUserProfile(username).then(setUserProfile);
+    
     // Fetch repos
     fetchRepos(username, year).then(setRepos);
     fetchRepos(username, prevYear).then(setPrevRepos);
@@ -107,6 +115,9 @@ export default function Stats({ username, year, theme }) {
 
   return (
     <div className="flex flex-col w-full gap-16">
+
+      {/* User Profile Section */}
+      <UserProfile userProfile={userProfile} username={username} />
 
       {/* Basic Stats Grid */}
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
