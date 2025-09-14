@@ -126,11 +126,9 @@ export default function Stats({ username, year, theme }) {
           commits: commitsInAYear,
           repos: repos?.length || 0,
           topLanguage: topLanguages.length > 0 ? topLanguages[0].name : null,
-          mostActiveRepo: activeRepo?.repo,
-          stars: starsReceived
+          mostActiveRepo: activeRepo?.repo
         }}
       />
-
       {/* User Profile Section */}
       <UserProfile userProfile={userProfile} username={username} />
 

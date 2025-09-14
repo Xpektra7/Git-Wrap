@@ -25,7 +25,8 @@ export default function MetaTags({ userProfile, username, stats }) {
     }
 
     // Generate dynamic description with stats
-    let description = `${userProfile.name || username}'s 2025 GitHub journey`;
+    const currentYear = new Date().getFullYear();
+    let description = `${userProfile.name || username}'s ${currentYear} GitHub journey`;
     
     if (stats) {
       const statParts = [];
@@ -34,17 +35,17 @@ export default function MetaTags({ userProfile, username, stats }) {
       if (stats.topLanguage) statParts.push(`coding in ${stats.topLanguage}`);
       
       if (statParts.length > 0) {
-        description = `${userProfile.name || username} made ${statParts.join(', ')} in 2025`;
+        description = `${userProfile.name || username} made ${statParts.join(', ')} in ${currentYear}`;
       }
     }
 
     // Update meta tags with user-specific data
     updateMetaTags({
-      title: `${userProfile.name || username}'s 2025 GitHub Year in Review - GitWrap`,
-      description: description,
+      title: `${userProfile.name || username}'s ${currentYear} GitHub Year in Review - GitWrap`,
+      description,
       image: userProfile.avatarUrl || '/wrap.svg',
       url: window.location.href,
-      username: username
+      username
     });
 
   }, [userProfile, username, stats]);
@@ -68,9 +69,13 @@ function updateMetaTags({ title, description, image, url, username }) {
   };
 
   // Open Graph tags
+  // Helper to get the full image URL
+  const safeImage = typeof image === 'string' && image ? image : '/wrap.svg';
+  const buildImageUrl = (img) => (img.startsWith('http') ? img : `${window.location.origin}${img}`);
+
   updateMetaTag('og:title', title);
   updateMetaTag('og:description', description);
-  updateMetaTag('og:image', image.startsWith('http') ? image : `${window.location.origin}${image}`);
+  updateMetaTag('og:image', buildImageUrl(safeImage));
   updateMetaTag('og:url', url);
   updateMetaTag('og:type', 'website');
   updateMetaTag('og:site_name', 'GitWrap');
@@ -79,9 +84,9 @@ function updateMetaTags({ title, description, image, url, username }) {
   updateMetaTag('twitter:card', 'summary_large_image', 'name');
   updateMetaTag('twitter:title', title, 'name');
   updateMetaTag('twitter:description', description, 'name');
-  updateMetaTag('twitter:image', image.startsWith('http') ? image : `${window.location.origin}${image}`, 'name');
-  updateMetaTag('twitter:site', '@Xpektra7', 'name');
-
+  updateMetaTag('twitter:image', buildImageUrl(safeImage), 'name');
+  updateMetaTag('twitter:site', '@gitwrap', 'name');
+  
   // Additional meta tags
   updateMetaTag('description', description, 'name');
   
