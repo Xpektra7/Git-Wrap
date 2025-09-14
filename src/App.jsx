@@ -3,6 +3,7 @@ import { useSearchParams } from "react-router-dom";
 import Stats from "./Stats";
 import UserNotFound from "./components/UserNotFound";
 import LandingPage from "./components/LandingPage";
+import { getUserProfile } from "./lib/github";
 
 export default function App() {
   const [name, setName] = useState("");
@@ -17,17 +18,8 @@ export default function App() {
       setValidUser(null);
       return;
     }
-    (async () => {
-      try {
-        const res = await fetch(`https://api.github.com/users/${username}`);
-        setValidUser(res.ok);
-        if (!res.ok) setSearchParams({ username: "invalid" });
-      } catch {
-        setValidUser(false);
-        setSearchParams({ username: "invalid" });
-      }
-    })();
-  }, [username, setSearchParams]);
+    setValidUser(true);
+  }, [username]);
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -83,7 +75,7 @@ export default function App() {
         {!username && <LandingPage />}
         {username === "invalid" && <UserNotFound  />}
         {username && validUser && username !== "guest" && (
-          <Stats username={username} year={new Date().getFullYear()} theme={theme} />
+          <Stats username={username} year={new Date().getFullYear()} theme={theme} setSearchParams={setSearchParams} />
         )}
       </div>
     </main>
