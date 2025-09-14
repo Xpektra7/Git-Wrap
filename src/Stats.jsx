@@ -3,6 +3,7 @@ import DailyCommits from "./components/DailyCommits";
 import HourlyCommits from "./components/HourlyCommits";
 import LanguageOverview from "./components/LanguagesOverview";
 import UserProfile from "./components/UserProfile";
+import MetaTags from "./components/MetaTags";
 import {
   fetchRepos,
   getTotalCommits,
@@ -117,7 +118,17 @@ export default function Stats({ username, year, theme }) {
 
   return (
     <div className="flex flex-col w-full gap-16">
-
+      {/* Dynamic Meta Tags for Social Media Previews */}
+      <MetaTags 
+        userProfile={userProfile} 
+        username={username} 
+        stats={{
+          commits: commitsInAYear,
+          repos: repos?.length || 0,
+          topLanguage: topLanguages.length > 0 ? topLanguages[0].name : null,
+          mostActiveRepo: activeRepo?.repo
+        }}
+      />
       {/* User Profile Section */}
       <UserProfile userProfile={userProfile} username={username} />
 
