@@ -40,7 +40,7 @@ export default function UserProfile({ userProfile, username }) {
             e.target.src = "https://ui-avatars.com/api/?name=" + encodeURIComponent(userProfile.name || username);
           }}
         />
-        <div className="flex flex-col gap-2 flex-1">
+  <div className="flex flex-col gap-2 flex-1 min-w-0">
           <div>
             <h2 className="text-xl font-bold text-(--color)">
               {userProfile.name || username}
@@ -54,7 +54,7 @@ export default function UserProfile({ userProfile, username }) {
               href={userProfile.websiteUrl}
               target="_blank"
               rel="noopener noreferrer"
-              className="flex items-center gap-2 text-sm text-(--color) hover:text-(--sub-text) transition-colors"
+              className="flex items-center gap-2 text-sm text-(--color) hover:text-(--sub-text) transition-colors min-w-0 max-w-full"
             >
               <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
                 <path d="M10.59,13.41C11,13.8 11,14.4 10.59,14.81C10.2,15.2 9.6,15.2 9.19,14.81L7.78,13.4L6.37,14.81C5.96,15.2 5.36,15.2 4.95,14.81L3.54,13.4C3.13,13 3.13,12.4 3.54,12L9.19,6.37C9.6,5.96 10.2,5.96 10.61,6.37L12,7.78L13.41,6.37C13.8,5.96 14.4,5.96 14.81,6.37L20.46,12C20.87,12.4 20.87,13 20.46,13.41L19.05,14.82C18.64,15.23 18.04,15.23 17.63,14.82L16.22,13.41L14.81,14.82C14.4,15.23 13.8,15.23 13.39,14.82L12,13.41L10.59,13.41Z"/>
@@ -68,12 +68,12 @@ export default function UserProfile({ userProfile, username }) {
       {/* Social Links */}
       <div className="flex flex-wrap gap-3">
         {/* Twitter/X */}
-        {userProfile.twitterUsername && (
+          {userProfile.twitterUsername && (
           <a 
             href={`https://twitter.com/${userProfile.twitterUsername}`}
             target="_blank"
             rel="noopener noreferrer"
-            className="flex items-center gap-2 px-3 py-1 bg-(--border) rounded-full text-sm text-(--color) hover:bg-(--sub-text) transition-colors"
+            className="flex items-center gap-2 px-3 py-1 bg-(--border) rounded-full text-sm text-(--color) hover:bg-(--sub-text) transition-colors min-w-0"
           >
             <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor">
               <path d="M22.46,6C21.69,6.35 20.86,6.58 20,6.69C20.88,6.16 21.56,5.32 21.88,4.31C21.05,4.81 20.13,5.16 19.16,5.36C18.37,4.5 17.26,4 16,4C13.65,4 11.73,5.92 11.73,8.29C11.73,8.63 11.77,8.96 11.84,9.27C8.28,9.09 5.11,7.38 3,4.79C2.63,5.42 2.42,6.16 2.42,6.94C2.42,8.43 3.17,9.75 4.33,10.5C3.62,10.5 2.96,10.3 2.38,10C2.38,10 2.38,10 2.38,10.05C2.38,12.15 3.86,13.85 5.82,14.24C5.46,14.34 5.08,14.39 4.69,14.39C4.42,14.39 4.15,14.36 3.89,14.31C4.43,15.98 6,17.26 7.89,17.29C6.43,18.45 4.58,19.13 2.56,19.13C2.22,19.13 1.88,19.11 1.54,19.07C3.44,20.29 5.7,21 8.12,21C16,21 20.33,14.46 20.33,8.79C20.33,8.6 20.33,8.42 20.32,8.23C21.16,7.63 21.88,6.87 22.46,6Z"/>
@@ -82,7 +82,7 @@ export default function UserProfile({ userProfile, username }) {
           </a>
         )}
 
-        {userProfile.socialAccounts?.filter(account => 
+          {userProfile.socialAccounts?.filter(account => 
           account.provider.toLowerCase() !== 'twitter' && 
           account.provider.toLowerCase() !== 'x'
         ).map((account, index) => (
@@ -91,7 +91,7 @@ export default function UserProfile({ userProfile, username }) {
             href={account.url}
             target="_blank"
             rel="noopener noreferrer"
-            className="flex items-center gap-2 px-3 py-1 bg-(--border) rounded-full text-sm text-(--color) hover:bg-(--sub-text) transition-colors"
+              className="flex items-center gap-2 px-3 py-1 bg-(--border) rounded-full text-sm text-(--color) hover:bg-(--sub-text) transition-colors min-w-0"
           >
             <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor">
               <path d="M10.59,13.41C11,13.8 11,14.4 10.59,14.81C10.2,15.2 9.6,15.2 9.19,14.81L7.78,13.4L6.37,14.81C5.96,15.2 5.36,15.2 4.95,14.81L3.54,13.4C3.13,13 3.13,12.4 3.54,12L9.19,6.37C9.6,5.96 10.2,5.96 10.61,6.37L12,7.78L13.41,6.37C13.8,5.96 14.4,5.96 14.81,6.37L20.46,12C20.87,12.4 20.87,13 20.46,13.41L19.05,14.82C18.64,15.23 18.04,15.23 17.63,14.82L16.22,13.41L14.81,14.82C14.4,15.23 13.8,15.23 13.39,14.82L12,13.41L10.59,13.41Z"/>
