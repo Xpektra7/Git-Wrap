@@ -27,7 +27,7 @@ export default function App() {
     if (!name.trim()) {
       setSearchParams();
     } else {
-      setSearchParams({ username: name });
+      setSearchParams({ username: name.trim() });
     }
   };
 

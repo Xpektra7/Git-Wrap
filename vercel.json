@@ -5,7 +5,7 @@
       "destination": "/index.html"
     },
     {
-      "source": "/?username=:username",
+      "source": "/:username",
       "destination": "/api/og/:username"
     },
     {
