@@ -16,6 +16,9 @@ body[data-theme="light"]{
     --color: hsl(0, 0%, 10%);
     --border: hsl(0, 0%, 60%);
     --sub-text: hsl(0, 0%, 30%);
+    .logo{
+        filter: invert();
+    }
 }
 body[data-theme="dark"]{
     --background-color: hsl(0, 0%, 6%);
@@ -29,6 +32,5 @@ body{
     background-color: var(--background-color);
     color: var(--color);
     border-color: var(--border);
-
 }
 
