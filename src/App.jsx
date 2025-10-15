@@ -40,6 +40,11 @@ export default function App() {
       
       {/* Header */}
       <div className="flex w-full max-h-[10vh] justify-between p-4 px-8 md:px-24">
+        <div className="hidden md:flex items-center gap-2 ">
+          <img src="./logo.svg" alt="logo" className="logo" />
+          <h1 className="text-base font-bold">GitWrap</h1>
+        </div>
+          
         <div className="flex gap-4 items-center">
           <form onSubmit={handleSubmit} className="flex gap-2">
             <input
