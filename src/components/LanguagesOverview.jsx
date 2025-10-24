@@ -28,7 +28,7 @@ export default function LanguageOverview({username,year, theme}) {
   // Fetch languages breakdown data
   useEffect(() => {
     getLanguagesBreakdown(username,year).then(setLanguagesBreakdown);
-  }, []);
+  }, [username, year]);
 
 
   const aggregate = languagesBreakdown?.aggregate || {};
