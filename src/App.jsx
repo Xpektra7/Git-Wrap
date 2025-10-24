@@ -4,7 +4,6 @@ import Stats from "./Stats";
 import UserNotFound from "./components/UserNotFound";
 import LandingPage from "./components/LandingPage";
 import MetaTags from "./components/MetaTags";
-import { getUserProfile } from "./lib/github";
 
 export default function App() {
   const [name, setName] = useState("");
