@@ -4,7 +4,7 @@ import { useSearchParams } from "react-router-dom";
 import Stats from "./Stats";
 import UserNotFound from "./components/UserNotFound";
 import LandingPage from "./components/LandingPage";
-import MetaTags from "./components/MetaTags";
+import { Analytics } from "@vercel/analytics/next"
 
 export default function App(): React.ReactElement {
   const [name, setName] = useState<string>("");

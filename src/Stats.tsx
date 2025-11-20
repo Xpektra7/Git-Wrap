@@ -1,4 +1,3 @@
-import * as React from "react";
 import { useEffect, useState } from "react";
 import type { SetURLSearchParams } from "react-router-dom";
 import StatCard from "./StatCard";
