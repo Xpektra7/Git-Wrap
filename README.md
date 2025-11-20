@@ -39,7 +39,7 @@ It highlights your coding journey — commits, pull requests, issues, stars, rep
 - [x] Dark mode + theme switcher  
 - [ ] Export stats as shareable social cards
     - [ ] Server Side Image generation
-    - [ ] Client side capture
+    - [x] Client side capture
 
 ---
 
