@@ -27,7 +27,7 @@ body[data-theme="dark"]{
     --sub-text: hsl(0, 0%, 60%);
 }
 body{
-    font-family: "Satoshi", sans-serif;
+    font-family: "Satoshi", 'Inter', system-ui;
     transition: all 0.3s ease-in-out;
     background-color: var(--background-color);
     color: var(--color);
