@@ -1,4 +1,11 @@
-export default function UserProfile({ userProfile, username }) {
+import React from "react";
+
+interface UserProfileProps {
+  userProfile: any | null;
+  username: string;
+}
+
+export default function UserProfile({ userProfile, username }: UserProfileProps) {
   if (!userProfile) {
     return (
       <div className="flex items-center gap-4 p-4 border border-(--border) rounded-md">
@@ -31,26 +38,24 @@ export default function UserProfile({ userProfile, username }) {
     <div className="flex flex-col gap-4 p-6 border border-(--border) rounded-md bg-(--background-color)">
       {/* Main Profile Section */}
       <div className="flex items-start gap-4">
-        <img 
-          src={userProfile.avatarUrl} 
+        <img
+          src={userProfile.avatarUrl}
           alt={`${userProfile.name || username}'s avatar`}
           className="w-20 h-20 rounded-full border-2 border-(--border)"
-          onError={e => {
-            e.target.onerror = null;
-            e.target.src = "https://ui-avatars.com/api/?name=" + encodeURIComponent(userProfile.name || username);
+          onError={(e: React.SyntheticEvent<HTMLImageElement, Event>) => {
+            const target = e.currentTarget as HTMLImageElement;
+            target.src = "https://ui-avatars.com/api/?name=" + encodeURIComponent(userProfile.name || username);
           }}
         />
-  <div className="flex flex-col gap-2 flex-1 min-w-0">
+        <div className="flex flex-col gap-2 flex-1 min-w-0">
           <div>
-            <h2 className="text-xl font-bold text-(--color)">
-              {userProfile.name || username}
-            </h2>
+            <h2 className="text-xl font-bold text-(--color)">{userProfile.name || username}</h2>
             <p className="text-(--sub-text)">@{username}</p>
           </div>
-          
+
           {/* Website Link */}
           {userProfile.websiteUrl && (
-            <a 
+            <a
               href={userProfile.websiteUrl}
               target="_blank"
               rel="noopener noreferrer"
@@ -59,7 +64,7 @@ export default function UserProfile({ userProfile, username }) {
               <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
                 <path d="M10.59,13.41C11,13.8 11,14.4 10.59,14.81C10.2,15.2 9.6,15.2 9.19,14.81L7.78,13.4L6.37,14.81C5.96,15.2 5.36,15.2 4.95,14.81L3.54,13.4C3.13,13 3.13,12.4 3.54,12L9.19,6.37C9.6,5.96 10.2,5.96 10.61,6.37L12,7.78L13.41,6.37C13.8,5.96 14.4,5.96 14.81,6.37L20.46,12C20.87,12.4 20.87,13 20.46,13.41L19.05,14.82C18.64,15.23 18.04,15.23 17.63,14.82L16.22,13.41L14.81,14.82C14.4,15.23 13.8,15.23 13.39,14.82L12,13.41L10.59,13.41Z"/>
               </svg>
-              <span className="truncate">{userProfile.websiteUrl.replace(/^https?:\/\//, '')}</span>
+              <span className="truncate">{userProfile.websiteUrl.replace(/^https?:\/\//, "")}</span>
             </a>
           )}
         </div>
@@ -68,8 +73,8 @@ export default function UserProfile({ userProfile, username }) {
       {/* Social Links */}
       <div className="flex flex-wrap gap-3">
         {/* Twitter/X */}
-          {userProfile.twitterUsername && (
-          <a 
+        {userProfile.twitterUsername && (
+          <a
             href={`https://twitter.com/${userProfile.twitterUsername}`}
             target="_blank"
             rel="noopener noreferrer"
@@ -82,16 +87,16 @@ export default function UserProfile({ userProfile, username }) {
           </a>
         )}
 
-          {userProfile.socialAccounts?.filter(account => 
-          account.provider.toLowerCase() !== 'twitter' && 
-          account.provider.toLowerCase() !== 'x'
-        ).map((account, index) => (
-          <a 
+        {userProfile.socialAccounts?.filter((account: any) =>
+          account.provider.toLowerCase() !== "twitter" &&
+          account.provider.toLowerCase() !== "x"
+        ).map((account: any, index: number) => (
+          <a
             key={index}
             href={account.url}
             target="_blank"
             rel="noopener noreferrer"
-              className="flex items-center gap-2 px-3 py-1 bg-(--border) rounded-full text-sm text-(--color) hover:bg-(--sub-text) transition-colors min-w-0"
+            className="flex items-center gap-2 px-3 py-1 bg-(--border) rounded-full text-sm text-(--color) hover:bg-(--sub-text) transition-colors min-w-0"
           >
             <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor">
               <path d="M10.59,13.41C11,13.8 11,14.4 10.59,14.81C10.2,15.2 9.6,15.2 9.19,14.81L7.78,13.4L6.37,14.81C5.96,15.2 5.36,15.2 4.95,14.81L3.54,13.4C3.13,13 3.13,12.4 3.54,12L9.19,6.37C9.6,5.96 10.2,5.96 10.61,6.37L12,7.78L13.41,6.37C13.8,5.96 14.4,5.96 14.81,6.37L20.46,12C20.87,12.4 20.87,13 20.46,13.41L19.05,14.82C18.64,15.23 18.04,15.23 17.63,14.82L16.22,13.41L14.81,14.82C14.4,15.23 13.8,15.23 13.39,14.82L12,13.41L10.59,13.41Z"/>

@@ -1,15 +1,15 @@
+import * as React from "react";
 import { useState, useEffect } from "react";
 import { useSearchParams } from "react-router-dom";
 import Stats from "./Stats";
 import UserNotFound from "./components/UserNotFound";
 import LandingPage from "./components/LandingPage";
 import MetaTags from "./components/MetaTags";
-import { getUserProfile } from "./lib/github";
 
-export default function App() {
-  const [name, setName] = useState("");
-  const [validUser, setValidUser] = useState(null);
-  const [theme, setTheme] = useState("light");
+export default function App(): React.ReactElement {
+  const [name, setName] = useState<string>("");
+  const [validUser, setValidUser] = useState<boolean | null>(null);
+  const [theme, setTheme] = useState<string>("light");
   const [searchParams, setSearchParams] = useSearchParams();
 
   const username = searchParams.get("username");
@@ -22,7 +22,7 @@ export default function App() {
     setValidUser(true);
   }, [username]);
 
-  const handleSubmit = (e) => {
+  const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     if (!name.trim()) {
       setSearchParams();
@@ -33,18 +33,13 @@ export default function App() {
 
   return (
     <main className="relative bg-(--background-color) min-h-screen w-screen flex flex-col gap-8">
-      {/* Dynamic Meta Tags for landing page and error states */}
-      {(!username || username === "invalid") && (
-        <MetaTags username={username === "invalid" ? "invalid" : null} />
-      )}
-      
       {/* Header */}
       <div className="flex w-full max-h-[10vh] justify-between p-4 px-8 md:px-24">
         <div className="hidden md:flex items-center gap-2 ">
           <img src="./logo.svg" alt="logo" className="logo" />
           <h1 className="text-base font-bold">GitWrap</h1>
         </div>
-          
+
         <div className="flex gap-4 items-center">
           <form onSubmit={handleSubmit} className="flex gap-2">
             <input
@@ -85,8 +80,9 @@ export default function App() {
       {/* Status */}
       <div className="px-8 md:px-24">
         {!username && <LandingPage />}
-        {username === "invalid" && <UserNotFound  />}
+        {username === "invalid" && <UserNotFound />}
         {username && validUser && username !== "guest" && (
+          // @ts-ignore - Stats still JS during incremental migration
           <Stats username={username} year={new Date().getFullYear()} theme={theme} setSearchParams={setSearchParams} />
         )}
       </div>

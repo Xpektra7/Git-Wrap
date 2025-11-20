@@ -21,44 +21,39 @@ ChartJS.register(
 
 import { Line } from "react-chartjs-2";
 
-import { getActivityPatterns } from "../lib/github";
-import { useEffect , useState} from "react";
+interface HourlyProps {
+  commitTimeAnalysis: any;
+  prevCommitTimeAnalysis: any;
+  theme?: string;
+  year: number;
+  prevYear: number;
+}
 
-export default function DailyCommits({ username, theme , year,}) {
-    const [commitTimeAnalysis, setCommitTimeAnalysis] = useState();
-    const [prevCommitTimeAnalysis, setPrevCommitTimeAnalysis] = useState();
-
-    useEffect(() => {
-      getActivityPatterns(username, year).then(setCommitTimeAnalysis);
-      getActivityPatterns(username, year - 1).then(setPrevCommitTimeAnalysis);
-    }, [username, year]);
-
+export default function HourlyCommits({ commitTimeAnalysis, prevCommitTimeAnalysis, theme, year, prevYear }: HourlyProps) {
   return (
     <div className="w-full h-full row-span-1 md:row-span-2 col-span-1">
-      {(commitTimeAnalysis && prevCommitTimeAnalysis) && (commitTimeAnalysis.length === 7 ? (
+      {commitTimeAnalysis?.hourDistribution?.length === 24 ? (
         <Line
           data={{
-            labels: commitTimeAnalysis.map(day => day.day),
+            labels: [...Array(24).keys()].map((h) => h.toString().padStart(2, "0") + ":00"),
             datasets: [
               {
-                label: `Commits per Day (${year})`,
-                data: commitTimeAnalysis.map(day => {return day.commits}),
+                label: `Commits per Hour (${year})`,
+                data: commitTimeAnalysis.hourDistribution,
                 fill: false,
                 borderColor: `${theme === "light" ? "#000" : "#fff"}`,
                 tension: 0.25,
                 borderWidth: 2,
                 pointBorderColor: `${theme === "light" ? "#000" : "#fff"}`,
-                
               },
               {
-                label: `Commits per Day (${year -1})`,
-                data: prevCommitTimeAnalysis.map(day => {return day.commits}),
+                label: `Commits per Hour (${prevYear})`,
+                data: prevCommitTimeAnalysis.hourDistribution,
                 fill: false,
                 borderColor: `${theme === "light" ? "#b3b3b3" : "#4d4d4d"}`,
                 tension: 0.25,
                 borderWidth: 2,
                 pointBorderColor: `${theme === "light" ? "#b3b3b3" : "#4d4d4d"}`,
-                
               },
             ],
           }}
@@ -70,8 +65,8 @@ export default function DailyCommits({ username, theme , year,}) {
           }}
         />
       ) : (
-        <p>No daily commit data available.</p>
-      ))}
+        <p>No hourly commit data available.</p>
+      )}
     </div>
   );
 }

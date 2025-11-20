@@ -1,4 +1,6 @@
-export default function LandingPage() {
+import React from "react";
+
+export default function LandingPage(): React.ReactElement {
   return (
     <div className="flex flex-col md:flex-row h-[80vh] items-center justify-center gap-4">
       <img

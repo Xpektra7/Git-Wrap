@@ -8,41 +8,35 @@ import {
   Legend,
 } from "chart.js";
 
-ChartJS.register(
-  CategoryScale,
-  LinearScale,
-  BarElement,
-  Title,
-  Tooltip,
-  Legend
-);
+ChartJS.register(CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend);
 
 import { Bar } from "react-chartjs-2";
 import { getLanguagesBreakdown } from "../lib/github";
 import { useEffect, useState } from "react";
 
-export default function LanguageOverview({username,year, theme}) {
+interface LanguagesOverviewProps {
+  username: string;
+  year: number;
+  theme?: string;
+}
 
-  const [languagesBreakdown, setLanguagesBreakdown] = useState();
+export default function LanguageOverview({ username, year, theme }: LanguagesOverviewProps) {
+  const [languagesBreakdown, setLanguagesBreakdown] = useState<any | null>(null);
 
-  // Fetch languages breakdown data
   useEffect(() => {
-    getLanguagesBreakdown(username,year).then(setLanguagesBreakdown);
-  }, []);
-
+    getLanguagesBreakdown(username, String(year)).then((r: any) => setLanguagesBreakdown(r));
+  }, [username, year]);
 
   const aggregate = languagesBreakdown?.aggregate || {};
 
-  // Get entries, sort by commits (desc), take top 6, but restore original order
   const topKeys = Object.entries(aggregate)
-    .sort((a, b) => b[1] - a[1]) // sort by commits
-    .slice(0, 6) // pick top 6
-    .map(([lang]) => lang); // extract just the keys
+    .sort((a: any, b: any) => b[1] - a[1])
+    .slice(0, 6)
+    .map(([lang]: any) => lang);
 
-  // Preserve original order by filtering
   const filtered = Object.keys(aggregate)
     .filter((lang) => topKeys.includes(lang))
-    .reduce((obj, lang) => {
+    .reduce((obj: any, lang: string) => {
       obj[lang] = aggregate[lang];
       return obj;
     }, {});
@@ -58,7 +52,7 @@ export default function LanguageOverview({username,year, theme}) {
                 label: "Repos per Language",
                 data: Object.values(filtered),
                 backgroundColor: theme === "light" ? "#000" : "#e3e3e3",
-                borderRadius: '7',
+                borderRadius: 7,
               },
             ],
           }}

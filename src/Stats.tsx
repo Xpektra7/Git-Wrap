@@ -1,3 +1,6 @@
+import * as React from "react";
+import { useEffect, useState } from "react";
+import type { SetURLSearchParams } from "react-router-dom";
 import StatCard from "./StatCard";
 import DailyCommits from "./components/DailyCommits";
 import HourlyCommits from "./components/HourlyCommits";
@@ -8,7 +11,6 @@ import {
   fetchRepos,
   getTotalCommits,
   mostActiveRepo,
-  starGrazer,
   getStarsReceived,
   getStarsGiven,
   getTopLanguages,
@@ -19,114 +21,118 @@ import {
   getFollowersGrowth,
   getUserProfile,
 } from "./lib/github";
-import { useEffect, useState } from "react";
 
-export default function Stats({ username, year, theme }) {
+interface StatsProps {
+  username: string;
+  year: number;
+  theme?: string;
+  setSearchParams?: SetURLSearchParams;
+}
+
+export default function Stats({ username, year, theme }: StatsProps) {
   // User Profile State
-  const [userProfile, setUserProfile] = useState(null);
-  
+  const [userProfile, setUserProfile] = useState<any | null>(null);
+
   // Current Year States
-  const [repos, setRepos] = useState(0);
-  const [commitsInAYear, setCommitsInAYear] = useState(0);
-  const [activeRepo, setActiveRepo] = useState(null);
-  const [starsReceived, setStarsReceived] = useState(0);
-  const [starsGiven, setStarsGiven] = useState(0);
-  const [topLanguages, setTopLanguages] = useState([]);
-  const [collaborationCount, setCollaborationCount] = useState(0);
-  const [commitTimeAnalysis, setCommitTimeAnalysis] = useState({
+  const [repos, setRepos] = useState<any[]>([]);
+  const [commitsInAYear, setCommitsInAYear] = useState<number>(0);
+  const [activeRepo, setActiveRepo] = useState<any | null>(null);
+  const [starsReceived, setStarsReceived] = useState<any>(0);
+  const [starsGiven, setStarsGiven] = useState<any>(0);
+  const [topLanguages, setTopLanguages] = useState<any[]>([]);
+  const [collaborationCount, setCollaborationCount] = useState<number>(0);
+  const [commitTimeAnalysis, setCommitTimeAnalysis] = useState<any>({
     hourDistribution: Array(24).fill(0),
     nightOwl: 0,
     earlyBird: 0,
   });
-  const [stars, setStars] = useState(null); // legacy
-  const [streakInfo,setStreakInfo] = useState({
+  // legacy: stars data not used in UI currently
+  const [streakInfo, setStreakInfo] = useState<any>({
     longestStreak: 0,
     longestBreak: 0,
-    currentStreak: 0
+    currentStreak: 0,
   });
-  const [pullRequestStats, setPullRequestStats] = useState({ });
-  const [followers, setFollowers] = useState(0)
-
+  const [pullRequestStats, setPullRequestStats] = useState<any>({});
+  const [followers, setFollowers] = useState<{ count: number }>({ count: 0 });
 
   // Previous Year States
-  const [prevPullRequestStats, setPrevPullRequestStats] = useState({ });
-  const [prevRepos, setPrevRepos] = useState(0);
-  const [prevCommitsInAYear, setPrevCommitsInAYear] = useState(0);
-  const [prevActiveRepo, setPrevActiveRepo] = useState(null);
-  const [prevStarsReceived, setPrevStarsReceived] = useState(0);
-  const [prevStarsGiven, setPrevStarsGiven] = useState(0);
-  const [prevTopLanguages, setPrevTopLanguages] = useState([]);
-  const [prevCollaborationCount, setPrevCollaborationCount] = useState(0);
-  const [prevCommitTimeAnalysis, setPrevCommitTimeAnalysis] = useState({
+  const [prevPullRequestStats, setPrevPullRequestStats] = useState<any>({});
+  const [prevRepos, setPrevRepos] = useState<any[]>([]);
+  const [prevCommitsInAYear, setPrevCommitsInAYear] = useState<number>(0);
+  const [prevActiveRepo, setPrevActiveRepo] = useState<any | null>(null);
+  const [prevStarsReceived, setPrevStarsReceived] = useState<any>(0);
+  const [prevStarsGiven, setPrevStarsGiven] = useState<any>(0);
+  const [prevTopLanguages, setPrevTopLanguages] = useState<any[]>([]);
+  const [prevCollaborationCount, setPrevCollaborationCount] = useState<number>(0);
+  const [prevCommitTimeAnalysis, setPrevCommitTimeAnalysis] = useState<any>({
     hourDistribution: Array(24).fill(0),
     nightOwl: 0,
     earlyBird: 0,
   });
-  const [prevStreakInfo,setPrevStreakInfo] = useState({
+  const [prevStreakInfo, setPrevStreakInfo] = useState<any>({
     longestStreak: 0,
     longestBreak: 0,
-    currentStreak: 0
+    currentStreak: 0,
   });
-  const [prevFollowers, setPrevFollowers] = useState(0);
+  const [prevFollowers, setPrevFollowers] = useState<{ count: number }>({ count: 0 });
   const prevYear = year - 1;
 
   useEffect(() => {
     // Fetch user profile
     getUserProfile(username)
       .then(setUserProfile)
-      .catch((error) => setUserProfile({ error: error.message || "Failed to fetch profile" }));
-    
+      .catch((error: any) => setUserProfile({ error: error.message || "Failed to fetch profile" }));
+
     // Fetch repos
-    fetchRepos(username, year).then(setRepos);
-    fetchRepos(username, prevYear).then(setPrevRepos);
+  fetchRepos(username, String(year)).then((r: any) => setRepos(r as any));
+  fetchRepos(username, String(prevYear)).then((r: any) => setPrevRepos(r as any));
     // Total Commits
-    getTotalCommits(username, year).then(setCommitsInAYear);
-    getTotalCommits(username, prevYear).then(setPrevCommitsInAYear);
+  getTotalCommits(username, String(year)).then((r: any) => setCommitsInAYear(r as number));
+  getTotalCommits(username, String(prevYear)).then((r: any) => setPrevCommitsInAYear(r as number));
     // Active repos
-    mostActiveRepo(username, year).then(setActiveRepo);
-    mostActiveRepo(username, prevYear).then(setPrevActiveRepo);
-    
-    starGrazer(username).then(setStars); // legacy
-    // Stars Recieved
-    getStarsReceived(username, year).then(setStarsReceived);
-    getStarsReceived(username, prevYear).then(setPrevStarsReceived);
+  mostActiveRepo(username, String(year)).then((r: any) => setActiveRepo(r as any));
+  mostActiveRepo(username, String(prevYear)).then((r: any) => setPrevActiveRepo(r as any));
+
+    // Stars Received
+  getStarsReceived(username, String(year)).then((r: any) => setStarsReceived(r as any));
+  getStarsReceived(username, String(prevYear)).then((r: any) => setPrevStarsReceived(r as any));
     // Stars Given
-    getStarsGiven(username, year).then(setStarsGiven);
-    getStarsGiven(username, prevYear).then(setPrevStarsGiven);
+  getStarsGiven(username, String(year)).then((r: any) => setStarsGiven(r as any));
+  getStarsGiven(username, String(prevYear)).then((r: any) => setPrevStarsGiven(r as any));
     // Top Languages
-    getTopLanguages(username, year).then(setTopLanguages);
-    getTopLanguages(username, prevYear).then(setPrevTopLanguages);
+  getTopLanguages(username, String(year)).then((r: any) => setTopLanguages(r as any));
+  getTopLanguages(username, String(prevYear)).then((r: any) => setPrevTopLanguages(r as any));
     // Commit Time
-    getCommitTimeAnalysis(username, year).then(setCommitTimeAnalysis);
-    getCommitTimeAnalysis(username, prevYear).then(setPrevCommitTimeAnalysis);
+  getCommitTimeAnalysis(username, String(year)).then((r: any) => setCommitTimeAnalysis(r as any));
+  getCommitTimeAnalysis(username, String(prevYear)).then((r: any) => setPrevCommitTimeAnalysis(r as any));
     // Streaks
-    getStreaks(username, year).then(setStreakInfo);
-    getStreaks(username, prevYear).then(setPrevStreakInfo);
-    // Collaboartion
-    getCollaborationCount(username, year).then(setCollaborationCount);
-    getCollaborationCount(username, prevYear).then(setPrevCollaborationCount);
+  getStreaks(username, String(year)).then((r: any) => setStreakInfo(r as any));
+  getStreaks(username, String(prevYear)).then((r: any) => setPrevStreakInfo(r as any));
+    // Collaboration
+  getCollaborationCount(username, String(year)).then((r: any) => setCollaborationCount(r as number));
+  getCollaborationCount(username, String(prevYear)).then((r: any) => setPrevCollaborationCount(r as number));
     // Pull requests
-    getPullRequestsStats(username, year).then(setPullRequestStats);
-    getPullRequestsStats(username, prevYear).then(setPrevPullRequestStats);
+  getPullRequestsStats(username, String(year)).then((r: any) => setPullRequestStats(r as any));
+  getPullRequestsStats(username, String(prevYear)).then((r: any) => setPrevPullRequestStats(r as any));
     // Followers
-    getFollowersGrowth(username,year).then(setFollowers);
-    getFollowersGrowth(username,prevYear).then(setPrevFollowers);
-    
-    
-  }, [username]);
+  getFollowersGrowth(username, String(year)).then((r: any) => setFollowers(r as { count: number }));
+  getFollowersGrowth(username, String(prevYear)).then((r: any) => setPrevFollowers(r as { count: number }));
+
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [username, year]);
 
 
   return (
     <div className="flex flex-col w-full gap-16">
       {/* Dynamic Meta Tags for Social Media Previews */}
-      <MetaTags 
-        userProfile={userProfile} 
-        username={username} 
+      <MetaTags
+        userProfile={userProfile}
+        username={username}
         stats={{
           commits: commitsInAYear,
           repos: repos?.length || 0,
           topLanguage: topLanguages.length > 0 ? topLanguages[0].name : null,
-          mostActiveRepo: activeRepo?.repo
+          mostActiveRepo: activeRepo?.repo,
         }}
       />
       {/* User Profile Section */}
@@ -143,9 +149,7 @@ export default function Stats({ username, year, theme }) {
           prevValue={prevRepos ? prevRepos.length : 0}
           growth={
             repos && prevRepos && prevRepos.length !== 0
-              ? Math.round(
-                  ((repos.length - prevRepos.length) / prevRepos.length) * 100
-                )
+              ? Math.round(((repos.length - prevRepos.length) / prevRepos.length) * 100)
               : 0
           }
         />
@@ -157,10 +161,7 @@ export default function Stats({ username, year, theme }) {
           prevValue={prevCommitsInAYear}
           growth={
             prevCommitsInAYear
-              ? Math.round(
-                  ((commitsInAYear - prevCommitsInAYear) / prevCommitsInAYear) *
-                    100
-                )
+              ? Math.round(((commitsInAYear - prevCommitsInAYear) / prevCommitsInAYear) * 100)
               : 0
           }
         />
@@ -178,11 +179,7 @@ export default function Stats({ username, year, theme }) {
             typeof activeRepo.commits === "number" &&
             typeof prevActiveRepo.commits === "number" &&
             prevActiveRepo.commits !== 0
-              ? Math.round(
-                  ((activeRepo.commits - prevActiveRepo.commits) /
-                    prevActiveRepo.commits) *
-                    100
-                )
+              ? Math.round(((activeRepo.commits - prevActiveRepo.commits) / prevActiveRepo.commits) * 100)
               : 0
           }
         />
@@ -194,12 +191,7 @@ export default function Stats({ username, year, theme }) {
           prevValue={prevCollaborationCount || 0}
           growth={
             prevCollaborationCount !== 0
-              ? Math.round(
-                  ((collaborationCount -
-                    prevCollaborationCount) /
-                    prevCollaborationCount) *
-                    100
-                )
+              ? Math.round(((collaborationCount - prevCollaborationCount) / prevCollaborationCount) * 100)
               : 0
           }
         />
@@ -211,38 +203,28 @@ export default function Stats({ username, year, theme }) {
           subtitle={`Merged: ${pullRequestStats.merged || 0}`}
           prevValue={`${prevPullRequestStats.opened || 0}`}
           prevSubtitle={`Merged: ${prevPullRequestStats.merged || 0}`}
-          growth='ignore'
+          growth={'ignore'}
         />
         {/* Top Language*/}
         <StatCard
           username={username}
           title="Top Language"
           value={topLanguages.length > 0 ? topLanguages[0].name : "None"}
-          subtitle={
-            topLanguages.length > 0 ? `${topLanguages[0].count} repos` : ""
-          }
-          prevValue={
-            prevTopLanguages.length > 0 ? prevTopLanguages[0].name : "None"
-          }
-          prevSubtitle={
-            prevTopLanguages.length > 0 ? `${prevTopLanguages[0].count} repos` : ""
-          }
-          growth='ignore'
+          subtitle={topLanguages.length > 0 ? `${topLanguages[0].count} repos` : ""}
+          prevValue={prevTopLanguages.length > 0 ? prevTopLanguages[0].name : "None"}
+          prevSubtitle={prevTopLanguages.length > 0 ? `${prevTopLanguages[0].count} repos` : ""}
+          growth={'ignore'}
         />
-          {/* Stars */}
-          <StatCard
-            username={username}
-            title="Stars"
-            value={`Received: ${starsReceived?.error ? starsReceived.error : starsReceived}`}
-            subtitle={`Given: ${Array.isArray(starsGiven)
-                ? starsGiven.length
-                : starsGiven?.error || 0}`}
-            prevValue={`Received: ${prevStarsReceived?.error ? prevStarsReceived.error : prevStarsReceived}`}
-            prevSubtitle={`Given: ${Array.isArray(prevStarsGiven)
-                ? prevStarsGiven.length
-                : prevStarsGiven?.error || 0}`}
-            growth='ignore'
-          />
+        {/* Stars */}
+        <StatCard
+          username={username}
+          title="Stars"
+          value={`Received: ${starsReceived?.error ? starsReceived.error : starsReceived}`}
+          subtitle={`Given: ${Array.isArray(starsGiven) ? starsGiven.length : starsGiven?.error || 0}`}
+          prevValue={`Received: ${prevStarsReceived?.error ? prevStarsReceived.error : prevStarsReceived}`}
+          prevSubtitle={`Given: ${Array.isArray(prevStarsGiven) ? prevStarsGiven.length : prevStarsGiven?.error || 0}`}
+          growth={'ignore'}
+        />
         {/* Night Owl vs Early Bird */}
         <StatCard
           username={username}
@@ -267,7 +249,7 @@ export default function Stats({ username, year, theme }) {
               ? `Early: ${prevCommitTimeAnalysis.earlyBird}`
               : `Night: ${prevCommitTimeAnalysis.nightOwl}`
           }
-          growth='ignore'
+          growth={'ignore'}
           extra={[commitTimeAnalysis.difference, commitTimeAnalysis.type]}
         />
 
@@ -279,22 +261,18 @@ export default function Stats({ username, year, theme }) {
           subtitle={`Longest Break: ${streakInfo.longestBreak || 0}`}
           prevValue={`Longest Streak: ${prevStreakInfo.longestStreak || 0}`}
           prevSubtitle={`Longest Break: ${prevStreakInfo.longestBreak || 0}`}
-          growth='ignore'
+          growth={'ignore'}
         />
 
         {/* Followers */}
         <StatCard
-          username={username} 
+          username={username}
           title="Followers"
           value={followers.count}
           prevValue={prevFollowers.count}
           growth={
             prevFollowers.count !== 0
-              ? Math.round(
-                  ((followers.count - prevFollowers.count) /
-                    prevFollowers.count) *
-                    100
-                )
+              ? Math.round(((followers.count - prevFollowers.count) / prevFollowers.count) * 100)
               : 0
           }
         />
@@ -306,11 +284,7 @@ export default function Stats({ username, year, theme }) {
 
         <DailyCommits username={username} theme={theme} year={year} />
 
-        <LanguageOverview 
-          username={username}
-          year={year}
-          theme={theme}
-        />
+        <LanguageOverview username={username} year={year} theme={theme} />
       </div>
     </div>
   );
