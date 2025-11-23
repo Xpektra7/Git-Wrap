@@ -8,14 +8,17 @@
     src: url(./assets/Satoshi-Variable.woff2);
 }
 
-h1,h2,h3,h4,h5,h6,h7 {
+h1,h2,h3,h4,h5,h6{
     font-family: "JetBrains Mono", monospace;
 }
 body[data-theme="light"]{
-    --background-color: hsl(0, 0%, 94%);
+    --background-color: hsl(0, 0%, 99%);
     --color: hsl(0, 0%, 10%);
     --border: hsl(0, 0%, 60%);
     --sub-text: hsl(0, 0%, 30%);
+    .logo{
+        filter: invert();
+    }
 }
 body[data-theme="dark"]{
     --background-color: hsl(0, 0%, 6%);
@@ -24,7 +27,7 @@ body[data-theme="dark"]{
     --sub-text: hsl(0, 0%, 60%);
 }
 body{
-    font-family: "Satoshi", sans-serif;
+    font-family: "Satoshi", 'Inter', system-ui;
     transition: all 0.3s ease-in-out;
     background-color: var(--background-color);
     color: var(--color);
