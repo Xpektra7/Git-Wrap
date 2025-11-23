@@ -1,36 +1,48 @@
 @import "tailwindcss";
 @font-face {
-    font-family: "JetBrains Mono";
-    src: url(./assets/JetBrainsMono-Variable.woff2) ;
+  font-family: "JetBrains Mono";
+  src: url(./assets/JetBrainsMono-Variable.woff2);
 }
 @font-face {
-    font-family: "Satoshi";
-    src: url(./assets/Satoshi-Variable.woff2);
+  font-family: "Satoshi";
+  src: url(./assets/Satoshi-Variable.woff2);
 }
 
-h1,h2,h3,h4,h5,h6{
-    font-family: "JetBrains Mono", monospace;
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  font-family: "JetBrains Mono", monospace;
 }
-body[data-theme="light"]{
-    --background-color: hsl(0, 0%, 99%);
-    --color: hsl(0, 0%, 10%);
-    --border: hsl(0, 0%, 60%);
-    --sub-text: hsl(0, 0%, 30%);
-    .logo{
-        filter: invert();
-    }
+body[data-theme="light"] {
+  --background-color: hsl(0, 0%, 99%);
+  --color: hsl(0, 0%, 10%);
+  --border: hsl(0, 0%, 60%);
+  --sub-text: hsl(0, 0%, 30%);
+  --social-bg:hsl(0, 0%, 99%) ;
+  --social-text: hsl(0, 0%, 98%);
+  --social-accent: hsl(265, 72%, 60%);
+  --social-sub: hsl(0, 0%, 60%);
+  .logo {
+    filter: invert();
+  }
 }
-body[data-theme="dark"]{
-    --background-color: hsl(0, 0%, 6%);
-    --color: hsl(0, 0%, 94%);
-    --border: hsl(0, 0%, 20%);
-    --sub-text: hsl(0, 0%, 60%);
+body[data-theme="dark"] {
+  --background-color: hsl(0, 0%, 6%);
+  --color: hsl(0, 0%, 94%);
+  --border: hsl(0, 0%, 20%);
+  --sub-text: hsl(0, 0%, 60%);
 }
-body{
-    font-family: "Satoshi", 'Inter', system-ui;
-    transition: all 0.3s ease-in-out;
-    background-color: var(--background-color);
-    color: var(--color);
-    border-color: var(--border);
+body {
+  font-family: "Satoshi", "Inter", system-ui;
+  transition: all 0.3s ease-in-out;
+  background-color: var(--background-color);
+  color: var(--color);
+  border-color: var(--border);
+  --social-bg: hsl(0, 0%, 6%);
+  --social-text: hsl(0, 0%, 98%);
+  --social-accent: hsl(265, 72%, 60%);
+  --social-sub: hsl(0, 0%, 60%);
 }
-
