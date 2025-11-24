@@ -22,9 +22,9 @@ body[data-theme="light"] {
   --border: hsl(0, 0%, 60%);
   --sub-text: hsl(0, 0%, 30%);
   --social-bg:hsl(0, 0%, 99%) ;
-  --social-text: hsl(0, 0%, 98%);
-  --social-accent: hsl(265, 72%, 60%);
-  --social-sub: hsl(0, 0%, 60%);
+  --social-text: hsl(0, 0%, 2%);
+  --social-accent: hsl(265, 60%, 53%);
+  --social-sub: hsl(0, 0%, 40%);
   .logo {
     filter: invert();
   }
