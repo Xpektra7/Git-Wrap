@@ -22,10 +22,10 @@ export default function StatCard({
   growth,
   extra,
 }: StatCardProps): React.ReactElement {
-  
+
   // 1. STATE: Control the visibility of the dialog
   const [isDialogOpen, setIsDialogOpen] = useState(false);
-  
+
   const displayGrowth =
     growth === "ignore"
       ? ""
@@ -49,24 +49,11 @@ export default function StatCard({
           <h2 className="text-sm text-(--sub-text)">{title}</h2>
           <div
             className="cursor-pointer text-(--sub-text) hover:text-(--color)"
-            title="Download as image"
+            title="Share Stat"
             // 2. ACTION: Open the dialog on click
-            onClick={handleShareClick} 
+            onClick={handleShareClick}
           >
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              fill="none"
-              viewBox="0 0 24 24"
-              strokeWidth={1.5}
-              stroke="currentColor"
-              className="w-5 h-5"
-            >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                d="M3 16.5v2.25A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75V16.5m-13.5-9L12 3m0 0l4.5 4.5M12 3v13.5"
-              />
-            </svg>
+            <svg xmlns="http://www.w3.org/2000/svg" width={24} height={24} viewBox="0 0 24 24"><g fill="none" stroke="currentColor" strokeWidth={1.5}><path d="M9 12a2.5 2.5 0 1 1-5 0a2.5 2.5 0 0 1 5 0Z"></path><path strokeLinecap="round" d="M14 6.5L9 10m5 7.5L9 14"></path><path d="M19 18.5a2.5 2.5 0 1 1-5 0a2.5 2.5 0 0 1 5 0Zm0-13a2.5 2.5 0 1 1-5 0a2.5 2.5 0 0 1 5 0Z"></path></g></svg>
           </div>
         </div>
         <div className="flex flex-wrap gap-2 items-baseline">
@@ -83,7 +70,7 @@ export default function StatCard({
           <p className="text-sm text-(--sub-text)">{displayGrowth}</p>
         </div>
       )}
-      
+
       {/* 3. CONDITIONAL RENDER: Display the dialog */}
       {isDialogOpen && (
         <SocialShareDialog

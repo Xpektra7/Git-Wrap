@@ -35,18 +35,18 @@ const SocialShareDialog = ({ username, title, value, subtitle, extra, onClose }:
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/70 p-4 transition-opacity">
       
       {/* Modal Content Container */}
-      <div className="bg-white dark:bg-gray-800 rounded-lg shadow-2xl max-w-4xl w-full flex flex-col md:flex-row overflow-hidden relative">
+      <div className="bg-(--background-color) rounded-lg shadow-2xl max-w-4xl w-full flex flex-col md:flex-row overflow-hidden relative">
         
         {/* Close Button */}
         <button
           onClick={onClose}
-          className="absolute top-2 right-2 text-gray-500 hover:text-gray-900 dark:text-gray-400 dark:hover:text-white z-50 p-2"
+          className="absolute top-2 right-2 text-(--border) hover:text-(--color) z-50 p-2"
         >
           &times;
         </button>
 
         {/* --- Left Side: Social Card Preview (Scaled Down) --- */}
-        <div className="p-4 md:p-8 flex items-center justify-center bg-gray-100 dark:bg-gray-900 w-full md:w-1/2">
+        <div className="p-4 md:p-8 flex items-center justify-center bg-(--background-color) w-full md:w-1/2">
           <div ref={previewRef} className="w-full aspect-square transform origin-top-left shadow-2xl relative">
             {/* RENDER THE SOCIAL CARD FOR PREVIEW */}
             <SocialCard 
@@ -69,7 +69,7 @@ const SocialShareDialog = ({ username, title, value, subtitle, extra, onClose }:
               {/* 1. Download Button */}
               <button
                 onClick={handleDownload}
-                className="w-full flex items-center justify-center bg-purple-600 text-white font-semibold py-3 px-4 rounded-lg hover:bg-purple-700 transition-colors"
+                className="w-full flex items-center justify-center bg-purple-600 text-(--color) font-semibold py-3 px-4 rounded-lg hover:bg-purple-700 transition-colors"
               >
                 📥 Download Image
               </button>
@@ -79,7 +79,7 @@ const SocialShareDialog = ({ username, title, value, subtitle, extra, onClose }:
                 href={`https://twitter.com/intent/tweet?text=${shareText}&url=${shareUrl}`}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="w-full flex items-center justify-center bg-[#1DA1F2] text-white font-semibold py-3 px-4 rounded-lg hover:bg-[#1A93E4] transition-colors"
+                className="w-full flex items-center justify-center bg-[#1DA1F2] text(--color) font-semibold py-3 px-4 rounded-lg hover:bg-[#1A93E4] transition-colors"
               >
                 🐦 Share to X
               </a>
@@ -89,23 +89,25 @@ const SocialShareDialog = ({ username, title, value, subtitle, extra, onClose }:
                 href={`https://api.whatsapp.com/send?text=${shareText}%20${shareUrl}`}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="w-full flex items-center justify-center bg-[#25D366] text-white font-semibold py-3 px-4 rounded-lg hover:bg-[#128C7E] transition-colors"
+                className="w-full flex items-center justify-center bg-[#25D366] text(--color) font-semibold py-3 px-4 rounded-lg hover:bg-[#128C7E] transition-colors"
               >
                 💬 Share to WhatsApp
               </a>
 
-              {/* 4. Share to Instagram (Note: Direct sharing requires the image file, which is hard with only client-side capture. This link is typically just a prompt.) */}
-              <button
-                disabled
-                className="w-full flex items-center justify-center bg-[#C13584] text-white font-semibold py-3 px-4 rounded-lg opacity-50 cursor-not-allowed"
-                title="Direct image sharing requires mobile app or server-side rendering."
+              {/* 4. Share to Reddit (REPLACED INSTAGRAM) */}
+              <a
+                href={`https://www.reddit.com/submit?url=${shareUrl}&title=${shareText}`}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="w-full flex items-center justify-center bg-[#FF4500] text-white font-semibold py-3 px-4 rounded-lg hover:bg-[#FF5722] transition-colors"
               >
-                📸 Share to Instagram (Requires Download)
-              </button>
+                👽 Share to Reddit
+              </a>
+
             </div>
           </div>
           
-          <button onClick={onClose} className="mt-8 text-sm text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-white">
+          <button onClick={onClose} className="mt-8 text-sm text-(--color) hover:text(--color)">
             Close
           </button>
         </div>
