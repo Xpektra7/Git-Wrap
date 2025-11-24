@@ -21,7 +21,7 @@ const CodingPlanetBadge = ({ emoji = '✨' }) => {
         style={{ backgroundColor: accentColor, boxShadow: `0 0 30px 5px ${accentColor}80` }}
       >
         {/* Metric Specific Emoji (Hybrid Part) */}
-        <span className="text-[256px] drop-shadow-md" role="img" aria-label="metric icon">
+        <span className="text-9xl drop-shadow-md" role="img" aria-label="metric icon">
           {emoji}
         </span>
       </div>
