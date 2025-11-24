@@ -1,6 +1,5 @@
-import React, { useRef } from "react";
-import shareStat from "./lib/social";
-import SocialCard from "./components/SocialCard";
+import React, { useRef, useState } from "react";
+import SocialShareDialog from "./components/SocialShareDialog"; // <--- New Import
 
 interface StatCardProps {
   username?: string;
@@ -23,22 +22,36 @@ export default function StatCard({
   growth,
   extra,
 }: StatCardProps): React.ReactElement {
-  const cardRef = useRef<HTMLDivElement | null>(null);
-
+  
+  // 1. STATE: Control the visibility of the dialog
+  const [isDialogOpen, setIsDialogOpen] = useState(false);
+  
   const displayGrowth =
     growth === "ignore"
       ? ""
       : `${(growth as number) > 0 ? "↑" : "↓"} ${Math.abs(Number(growth))}%`;
 
+  // Function to open the dialog
+  const handleShareClick = () => {
+    setIsDialogOpen(true);
+  };
+
+  // Function to close the dialog
+  const handleCloseDialog = () => {
+    setIsDialogOpen(false);
+  };
+
   return (
-    <div ref={cardRef} className="flex relative flex-col rounded border border-(--border)">
+    // We remove the SocialCard from here and place it inside the dialog
+    <div className="flex relative flex-col rounded border border-(--border)">
       <div className="flex flex-col gap-4 p-4">
         <div className="flex w-full items-center justify-between">
           <h2 className="text-sm text-(--sub-text)">{title}</h2>
           <div
             className="cursor-pointer text-(--sub-text) hover:text-(--color)"
             title="Download as image"
-            onClick={() => shareStat(cardRef.current, String(title))}
+            // 2. ACTION: Open the dialog on click
+            onClick={handleShareClick} 
           >
             <svg
               xmlns="http://www.w3.org/2000/svg"
@@ -70,7 +83,19 @@ export default function StatCard({
           <p className="text-sm text-(--sub-text)">{displayGrowth}</p>
         </div>
       )}
-      <SocialCard username={username} title={String(title)} value={value} subtitle={subtitle} extra={extra} />
+      
+      {/* 3. CONDITIONAL RENDER: Display the dialog */}
+      {isDialogOpen && (
+        <SocialShareDialog
+          username={username}
+          title={String(title)}
+          value={value}
+          subtitle={subtitle}
+          extra={extra}
+          onClose={handleCloseDialog}
+        />
+      )}
+
     </div>
   );
 }
