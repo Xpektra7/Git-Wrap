@@ -1,19 +1,11 @@
 @import "tailwindcss";
-@font-face {
-  font-family: "JetBrains Mono";
-  src: url(./assets/JetBrainsMono-Variable.woff2);
-}
-@font-face {
-  font-family: "Satoshi";
-  src: url(./assets/Satoshi-Variable.woff2);
-}
-
-h1,
+@import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:ital,wght@0,100..800;1,100..800&family=Mozilla+Text:wght@200..700&display=swap');h1,
 h2,
 h3,
 h4,
 h5,
-h6 {
+h6,
+.font-mono {
   font-family: "JetBrains Mono", monospace;
 }
 body[data-theme="light"] {
@@ -36,7 +28,7 @@ body[data-theme="dark"] {
   --sub-text: hsl(0, 0%, 60%);
 }
 body {
-  font-family: "Satoshi", "Inter", system-ui;
+  font-family: "Mozilla Text", "Inter", system-ui;
   transition: all 0.3s ease-in-out;
   background-color: var(--background-color);
   color: var(--color);

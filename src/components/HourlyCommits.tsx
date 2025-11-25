@@ -59,6 +59,7 @@ export default function HourlyCommits({ commitTimeAnalysis, prevCommitTimeAnalys
           }}
           options={{
             maintainAspectRatio: false,
+            font: { family: 'Mozilla Text, Inter, system-ui' },
             plugins: {
               legend: { display: true },
             },

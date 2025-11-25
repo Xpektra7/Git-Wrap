@@ -69,6 +69,7 @@ export default function DailyCommits({ username, theme, year }: DailyCommitsProp
             ],
           }}
           options={{
+            font: { family: 'Mozilla Text, Inter, system-ui' },
             maintainAspectRatio: false,
             plugins: {
               legend: { display: true },

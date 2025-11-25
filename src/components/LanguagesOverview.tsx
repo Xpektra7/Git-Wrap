@@ -58,6 +58,7 @@ export default function LanguageOverview({ username, year, theme }: LanguagesOve
           }}
           options={{
             maintainAspectRatio: false,
+            font: { family: 'Mozilla Text, Inter, system-ui' },
             plugins: {
               legend: { display: false },
             },
