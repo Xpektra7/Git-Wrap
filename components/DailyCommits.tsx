@@ -23,6 +23,7 @@ import { Line } from "react-chartjs-2";
 
 import { getActivityPatterns } from "../lib/github";
 import { useEffect, useState } from "react";
+import { Card } from "./ui/card";
 
 type DayPattern = { day: string; commits: number };
 
@@ -42,10 +43,11 @@ export default function DailyCommits({ username, theme, year }: DailyCommitsProp
   }, [username, year]);
 
   return (
-    <div className="w-full h-full row-span-1 md:row-span-2 col-span-1">
+    <Card className="w-full h-full row-span-1 md:row-span-2 col-span-1 p-2">
       {commitTimeAnalysis && prevCommitTimeAnalysis && commitTimeAnalysis.length === 7 ? (
         <Line
           data={{
+
             labels: commitTimeAnalysis.map((day) => day.day),
             datasets: [
               {
@@ -71,14 +73,27 @@ export default function DailyCommits({ username, theme, year }: DailyCommitsProp
           options={{
             font: { family: 'Mozilla Text, Inter, system-ui' },
             maintainAspectRatio: false,
+
             plugins: {
-              legend: { display: true },
+              legend: { display: true, position: "bottom" },
+              title: {
+                display: true, text: "Daily Commits", font: { family: 'Jetbrains Mono' },
+              },
             },
+            scales: {
+              x: {
+                grid: { color: 'oklch(1 0 0 / 10%)' }
+              },
+              y: {
+                grid: { color: 'oklch(1 0 0 / 10%)' }
+              }
+            }
+
           }}
         />
       ) : (
         <p>No daily commit data available.</p>
       )}
-    </div>
+    </Card>
   );
 }

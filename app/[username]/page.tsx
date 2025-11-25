@@ -197,9 +197,9 @@ export default function Stats({params} : any): React.ReactElement {
           username={username}
           title="Pull Requests"
           value={`${pullRequestStats.opened || 0}`}
-          subtitle={`Merged: ${pullRequestStats.merged || 0}`}
+          subtitle={`Merged:${pullRequestStats.merged || 0}`}
           prevValue={`${prevPullRequestStats.opened || 0}`}
-          prevSubtitle={`Merged: ${prevPullRequestStats.merged || 0}`}
+          prevSubtitle={`Merged:${prevPullRequestStats.merged || 0}`}
           growth={'ignore'}
         />
         {/* Top Language*/}
@@ -216,10 +216,10 @@ export default function Stats({params} : any): React.ReactElement {
         <StatCard
           username={username}
           title="Stars"
-          value={`Received: ${starsReceived?.error ? starsReceived.error : starsReceived}`}
-          subtitle={`Given: ${Array.isArray(starsGiven) ? starsGiven.length : starsGiven?.error || 0}`}
-          prevValue={`Received: ${prevStarsReceived?.error ? prevStarsReceived.error : prevStarsReceived}`}
-          prevSubtitle={`Given: ${Array.isArray(prevStarsGiven) ? prevStarsGiven.length : prevStarsGiven?.error || 0}`}
+          value={`Received:${starsReceived?.error ? starsReceived.error : starsReceived}`}
+          subtitle={`Given:${Array.isArray(starsGiven) ? starsGiven.length : starsGiven?.error || 0}`}
+          prevValue={`Received:${prevStarsReceived?.error ? prevStarsReceived.error : prevStarsReceived}`}
+          prevSubtitle={`Given:${Array.isArray(prevStarsGiven) ? prevStarsGiven.length : prevStarsGiven?.error || 0}`}
           growth={'ignore'}
         />
         {/* Night Owl vs Early Bird */}
@@ -228,23 +228,23 @@ export default function Stats({params} : any): React.ReactElement {
           title="Night Owl vs Early Bird"
           value={
             commitTimeAnalysis.nightOwl > commitTimeAnalysis.earlyBird
-              ? `Night: ${commitTimeAnalysis.nightOwl}`
-              : `Early: ${commitTimeAnalysis.earlyBird}`
+              ? `Night:${commitTimeAnalysis.nightOwl}`
+              : `Early:${commitTimeAnalysis.earlyBird}`
           }
           subtitle={
             commitTimeAnalysis.nightOwl > commitTimeAnalysis.earlyBird
-              ? `Early: ${commitTimeAnalysis.earlyBird}`
-              : `Night: ${commitTimeAnalysis.nightOwl}`
+              ? `Early:${commitTimeAnalysis.earlyBird}`
+              : `Night:${commitTimeAnalysis.nightOwl}`
           }
           prevValue={
             prevCommitTimeAnalysis.nightOwl > prevCommitTimeAnalysis.earlyBird
-              ? `Night: ${prevCommitTimeAnalysis.nightOwl}`
-              : `Early: ${prevCommitTimeAnalysis.earlyBird}`
+              ? `Night:${prevCommitTimeAnalysis.nightOwl}`
+              : `Early:${prevCommitTimeAnalysis.earlyBird}`
           }
           prevSubtitle={
             prevCommitTimeAnalysis.nightOwl > prevCommitTimeAnalysis.earlyBird
-              ? `Early: ${prevCommitTimeAnalysis.earlyBird}`
-              : `Night: ${prevCommitTimeAnalysis.nightOwl}`
+              ? `Early:${prevCommitTimeAnalysis.earlyBird}`
+              : `Night:${prevCommitTimeAnalysis.nightOwl}`
           }
           growth={'ignore'}
           extra={[commitTimeAnalysis.difference, commitTimeAnalysis.type]}
@@ -253,11 +253,11 @@ export default function Stats({params} : any): React.ReactElement {
         {/* Streaks */}
         <StatCard
           username={username}
-          title="Streaks"
-          value={`Longest Streak: ${streakInfo.longestStreak || 0}`}
-          subtitle={`Longest Break: ${streakInfo.longestBreak || 0}`}
-          prevValue={`Longest Streak: ${prevStreakInfo.longestStreak || 0}`}
-          prevSubtitle={`Longest Break: ${prevStreakInfo.longestBreak || 0}`}
+          title="Longest Streaks/Breaks"
+          value={`Streak:${streakInfo.longestStreak || 0}`}
+          subtitle={`Break:${streakInfo.longestBreak || 0}`}
+          prevValue={`Longest Streak:${prevStreakInfo.longestStreak || 0}`}
+          prevSubtitle={`Longest Break:${prevStreakInfo.longestBreak || 0}`}
           growth={'ignore'}
         />
 
@@ -276,7 +276,7 @@ export default function Stats({params} : any): React.ReactElement {
       </div>
 
 
-      <div className="grid grid-cols-1 mt-8 h-240 md:h-120 grid-rows-4 md:grid-cols-2 gap-4">
+      <div className="grid grid-cols-1 mt-8 h-240 md:h-150 grid-rows-4 md:grid-cols-2 gap-4">
         <HourlyCommits commitTimeAnalysis={commitTimeAnalysis} prevCommitTimeAnalysis={prevCommitTimeAnalysis} year={year} prevYear={prevYear} />
 
         <DailyCommits username={username} year={year} />

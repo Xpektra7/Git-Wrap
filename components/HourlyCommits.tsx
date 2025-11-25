@@ -20,6 +20,7 @@ ChartJS.register(
 );
 
 import { Line } from "react-chartjs-2";
+import { Card } from "./ui/card";
 
 interface HourlyProps {
   commitTimeAnalysis: any;
@@ -31,7 +32,7 @@ interface HourlyProps {
 
 export default function HourlyCommits({ commitTimeAnalysis, prevCommitTimeAnalysis, theme, year, prevYear }: HourlyProps) {
   return (
-    <div className="w-full h-full row-span-1 md:row-span-2 col-span-1">
+    <Card className="w-full h-full row-span-1 md:row-span-2 col-span-1 p-2">
       {commitTimeAnalysis?.hourDistribution?.length === 24 ? (
         <Line
           data={{
@@ -41,19 +42,19 @@ export default function HourlyCommits({ commitTimeAnalysis, prevCommitTimeAnalys
                 label: `Commits per Hour (${year})`,
                 data: commitTimeAnalysis.hourDistribution,
                 fill: false,
-                borderColor: `${theme === "light" ? "#000" : "#fff"}`,
+                borderColor: `${theme === "light" ? "oklch(0.145 0 0)" : "oklch(1 0 0)"}`,
                 tension: 0.25,
                 borderWidth: 2,
-                pointBorderColor: `${theme === "light" ? "#000" : "#fff"}`,
+                pointBorderColor: `${theme === "light" ? "oklch(0.145 0 0)" : "oklch(1 0 0)"}`,
               },
               {
                 label: `Commits per Hour (${prevYear})`,
                 data: prevCommitTimeAnalysis.hourDistribution,
                 fill: false,
-                borderColor: `${theme === "light" ? "#b3b3b3" : "#4d4d4d"}`,
+                borderColor: `${theme === "light" ? "oklch(0.556 0 0)" : "oklch(0.5 0 0)"}`,
                 tension: 0.25,
                 borderWidth: 2,
-                pointBorderColor: `${theme === "light" ? "#b3b3b3" : "#4d4d4d"}`,
+                pointBorderColor: `${theme === "light" ? "oklch(0.556 0 0)" : "oklch(0.5 0 0)"}`,
               },
             ],
           }}
@@ -61,13 +62,24 @@ export default function HourlyCommits({ commitTimeAnalysis, prevCommitTimeAnalys
             maintainAspectRatio: false,
             font: { family: 'Mozilla Text, Inter, system-ui' },
             plugins: {
-              legend: { display: true },
+              legend: { display: true, position: "bottom" },
+              title: {
+                display: true, text: "Hourly Commits", font: { family: 'Jetbrains Mono' },
+              },
             },
+            scales: {
+              x: {
+                grid: {color : 'oklch(1 0 0 / 10%)'}
+              },
+              y: {
+                grid: {color : 'oklch(1 0 0 / 10%)'}
+              }
+            }
           }}
         />
       ) : (
         <p>No hourly commit data available.</p>
       )}
-    </div>
+    </Card>
   );
 }

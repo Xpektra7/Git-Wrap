@@ -13,6 +13,7 @@ ChartJS.register(CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend)
 import { Bar } from "react-chartjs-2";
 import { getLanguagesBreakdown } from "../lib/github";
 import { useEffect, useState } from "react";
+import { Card } from "./ui/card";
 
 interface LanguagesOverviewProps {
   username: string;
@@ -42,7 +43,7 @@ export default function LanguageOverview({ username, year, theme }: LanguagesOve
     }, {});
 
   return (
-    <div className="w-full h-full row-span-1 md:row-span-2 col-span-1">
+    <Card className="w-full h-full row-span-1 md:row-span-2 col-span-1 p-2">
       {Object.keys(filtered).length > 0 ? (
         <Bar
           data={{
@@ -57,19 +58,29 @@ export default function LanguageOverview({ username, year, theme }: LanguagesOve
             ],
           }}
           options={{
+            
             maintainAspectRatio: false,
             font: { family: 'Mozilla Text, Inter, system-ui' },
             plugins: {
               legend: { display: false },
+              title: {
+                display: true, text: "Repos per Language", font: { family: 'Jetbrains Mono' },
+              },
             },
             scales: {
-              y: { beginAtZero: true },
-            },
+              x: {
+                grid: {color : 'oklch(1 0 0 / 10%)'}
+              },
+              y: {
+                beginAtZero: true,
+                grid: {color : 'oklch(1 0 0 / 10%)'}
+              }
+            }
           }}
         />
       ) : (
         <p>No language data available.</p>
       )}
-    </div>
+    </Card>
   );
 }

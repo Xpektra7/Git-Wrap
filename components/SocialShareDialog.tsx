@@ -40,7 +40,7 @@ const SocialShareDialog = ({ username, title, value, subtitle, extra, onClose }:
         {/* Close Button */}
         <button
           onClick={onClose}
-          className="absolute top-2 right-2 text-(--border) hover:text-(--color) z-50 p-2"
+          className="absolute top-2 right-2 text-border hover:text-color z-50 p-2"
         >
           &times;
         </button>
