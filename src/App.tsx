@@ -4,13 +4,22 @@ import { useSearchParams } from "react-router-dom";
 import Stats from "./Stats";
 import UserNotFound from "./components/UserNotFound";
 import LandingPage from "./components/LandingPage";
-import { Analytics } from "@vercel/analytics/react"
+
+const THEME_STORAGE_KEY = "gitwrap-theme";
 
 export default function App(): React.ReactElement {
   const [name, setName] = useState<string>("");
   const [validUser, setValidUser] = useState<boolean | null>(null);
-  const [theme, setTheme] = useState<string>("light");
+  const [theme, setTheme] = useState<string>(localStorage.getItem(THEME_STORAGE_KEY) || "light");
   const [searchParams, setSearchParams] = useSearchParams();
+
+  useEffect(() => {
+    document.body.setAttribute("data-theme", theme);
+  }, [theme]); 
+
+  useEffect(() => {
+    localStorage.setItem(THEME_STORAGE_KEY, theme);
+  }, [theme]);
 
   const username = searchParams.get("username");
 
