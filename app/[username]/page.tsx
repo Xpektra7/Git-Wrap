@@ -1,11 +1,12 @@
+"use client";
+import * as React from "react";
 import { useEffect, useState } from "react";
-import type { SetURLSearchParams } from "react-router-dom";
-import StatCard from "./StatCard";
-import DailyCommits from "./components/DailyCommits";
-import HourlyCommits from "./components/HourlyCommits";
-import LanguageOverview from "./components/LanguagesOverview";
-import UserProfile from "./components/UserProfile";
-import MetaTags from "./components/MetaTags";
+import StatCard from "../../components/StatCard";
+import DailyCommits from "../../components/DailyCommits";
+import HourlyCommits from "../../components/HourlyCommits";
+import LanguageOverview from "../../components/LanguagesOverview";
+import UserProfile from "../../components/UserProfile";
+import MetaTags from "../../components/MetaTags";
 import {
   fetchRepos,
   getTotalCommits,
@@ -19,16 +20,13 @@ import {
   getPullRequestsStats,
   getFollowersGrowth,
   getUserProfile,
-} from "./lib/github";
+} from "../../lib/github";
 
-interface StatsProps {
-  username: string;
-  year: number;
-  theme?: string;
-  setSearchParams?: SetURLSearchParams;
-}
+export default function Stats({params} : any): React.ReactElement {
+  const { username } = React.use(params) as { username: string };
+  const year = new Date().getFullYear();
 
-export default function Stats({ username, year, theme }: StatsProps) {
+  
   // User Profile State
   const [userProfile, setUserProfile] = useState<any | null>(null);
 
@@ -122,7 +120,7 @@ export default function Stats({ username, year, theme }: StatsProps) {
 
 
   return (
-    <div className="flex flex-col w-full gap-16">
+    <div className="flex flex-col w-full gap-16 p-8 md:p-16">
       {/* Dynamic Meta Tags for Social Media Previews */}
       <MetaTags
         userProfile={userProfile}
@@ -279,11 +277,11 @@ export default function Stats({ username, year, theme }: StatsProps) {
 
 
       <div className="grid grid-cols-1 mt-8 h-240 md:h-120 grid-rows-4 md:grid-cols-2 gap-4">
-        <HourlyCommits commitTimeAnalysis={commitTimeAnalysis} prevCommitTimeAnalysis={prevCommitTimeAnalysis} theme={theme} year={year} prevYear={prevYear} />
+        <HourlyCommits commitTimeAnalysis={commitTimeAnalysis} prevCommitTimeAnalysis={prevCommitTimeAnalysis} year={year} prevYear={prevYear} />
 
-        <DailyCommits username={username} theme={theme} year={year} />
+        <DailyCommits username={username} year={year} />
 
-        <LanguageOverview username={username} year={year} theme={theme} />
+        <LanguageOverview username={username} year={year}  />
       </div>
     </div>
   );

@@ -54,7 +54,7 @@ export interface UserProfile {
 
 const GITHUB_GRAPHQL_API = "https://api.github.com/graphql";
 const headers: Record<string, string> = {
-  Authorization: `Bearer ${(import.meta as any).env.VITE_GITHUB_TOKEN}`,
+  Authorization: `Bearer ${process.env.NEXT_PUBLIC_GITHUB_TOKEN}`,
   "Content-Type": "application/json",
 };
 

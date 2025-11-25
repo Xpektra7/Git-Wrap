@@ -1,5 +1,5 @@
 import React, { useRef, useState } from "react";
-import SocialShareDialog from "./components/SocialShareDialog"; // <--- New Import
+import SocialShareDialog from "./SocialShareDialog"; // <--- New Import
 
 interface StatCardProps {
   username?: string;
@@ -43,7 +43,7 @@ export default function StatCard({
 
   return (
     // We remove the SocialCard from here and place it inside the dialog
-    <div className="flex relative flex-col rounded border border-(--border)">
+    <div className="flex relative flex-col rounded border border-border">
       <div className="flex flex-col gap-4 p-4">
         <div className="flex w-full items-center justify-between">
           <h2 className="text-sm text-(--sub-text)">{title}</h2>
@@ -62,7 +62,7 @@ export default function StatCard({
         </div>
       </div>
       {prevValue !== undefined && (
-        <div className="flex p-2 px-4 justify-between border-t border-(--border) pt-2">
+        <div className="flex p-2 px-4 justify-between border-t border-border pt-2">
           <p className="text-sm text-(--sub-text)">
             {prevValue}
             {prevSubtitle && <span className="text-sm text-(--sub-text) ml-2">{prevSubtitle}</span>}
