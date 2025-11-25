@@ -13,7 +13,7 @@ interface SocialShareDialogProps {
 
 // Helper function to build the share text
 const buildShareText = (title: string, value: any, username: string) => {
-    return encodeURIComponent(`Check out my GitWrap stat: ${title} - ${value}! See your own year at GitWrap.io! @${username}`);
+    return encodeURIComponent(`Check out my GitWrap stat: ${title} - ${value}! See your own year in review at gitwrap-nine.vercel.app ! @${username}`);
 };
 
 const SocialShareDialog = ({ username, title, value, subtitle, extra, onClose }: SocialShareDialogProps) => {
