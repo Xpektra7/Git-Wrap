@@ -18,7 +18,7 @@ export default function Form() {
             />
             <button
                 type="submit"
-                className="bg-primary text-secondary rounded p-1 px-4 text-sm cursor-pointer"
+                className="bg-foreground text-secondary rounded p-1 px-4 text-sm cursor-pointer"
             >
                 Wrap
             </button>

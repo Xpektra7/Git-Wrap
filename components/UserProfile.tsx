@@ -3,7 +3,7 @@ import React from "react";
 // --- shadcn/ui Imports ---
 import { Card, CardContent } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
-import { LinkedinIcon, TwitterIcon, UserX, Link } from "lucide-react"; // Standard Lucide icons
+import { LinkedinIcon, TwitterIcon, UserX, Link, GithubIcon } from "lucide-react"; // Standard Lucide icons
 
 interface UserProfileProps {
   userProfile: any | null;
@@ -11,7 +11,7 @@ interface UserProfileProps {
 }
 
 export default function UserProfile({ userProfile, username }: UserProfileProps) {
-  
+
   // --- 1. Loading/Skeleton State ---
   if (!userProfile) {
     return (
@@ -35,9 +35,7 @@ export default function UserProfile({ userProfile, username }: UserProfileProps)
           <UserX className="w-8 h-8" /> {/* Lucide icon for error */}
         </div>
         <div className="flex flex-col">
-          {/* text-(--color) -> text-foreground */}
           <h3 className="font-semibold text-foreground">{username}</h3>
-          {/* text-(--sub-text) -> text-muted-foreground */}
           <p className="text-sm text-muted-foreground">Profile data unavailable</p>
         </div>
       </Card>
@@ -46,7 +44,6 @@ export default function UserProfile({ userProfile, username }: UserProfileProps)
 
   // --- 3. Success State ---
   return (
-    // bg-(--background-color) -> bg-background
     <Card className="flex flex-col gap-4 p-6 bg-background">
       <CardContent className="p-0 flex flex-col gap-4">
         {/* Main Profile Section */}
@@ -54,7 +51,6 @@ export default function UserProfile({ userProfile, username }: UserProfileProps)
           <img
             src={userProfile.avatarUrl}
             alt={`${userProfile.name || username}'s avatar`}
-            // border-(--border) -> border-border
             className="w-20 h-20 rounded-full border-2 border-border"
             onError={(e: React.SyntheticEvent<HTMLImageElement, Event>) => {
               const target = e.currentTarget as HTMLImageElement;
@@ -63,11 +59,11 @@ export default function UserProfile({ userProfile, username }: UserProfileProps)
           />
           <div className="flex flex-col gap-2 flex-1 min-w-0">
             <div>
-              {/* text-(--color) -> text-foreground */}
               <h2 className="text-xl font-bold text-foreground">{userProfile.name || username}</h2>
-              {/* text-(--sub-text) -> text-muted-foreground */}
               <p className="text-muted-foreground">@{username}</p>
             </div>
+
+
 
             {/* Website Link */}
             {userProfile.websiteUrl && (
@@ -75,7 +71,6 @@ export default function UserProfile({ userProfile, username }: UserProfileProps)
                 href={userProfile.websiteUrl}
                 target="_blank"
                 rel="noopener noreferrer"
-                // text-(--color) -> text-primary; hover:text-(--sub-text) -> hover:text-muted-foreground
                 className="flex items-center gap-2 text-sm text-primary hover:text-muted-foreground transition-colors min-w-0 max-w-full"
               >
                 <Link className="w-4 h-4" /> {/* Lucide Link icon */}
@@ -93,13 +88,21 @@ export default function UserProfile({ userProfile, username }: UserProfileProps)
               href={`https://twitter.com/${userProfile.twitterUsername}`}
               target="_blank"
               rel="noopener noreferrer"
-              // bg-(--border) -> bg-accent; text-(--color) -> text-foreground; hover:bg-(--sub-text) -> hover:bg-muted
               className="flex items-center gap-2 px-3 py-1 bg-accent rounded-full text-sm text-foreground hover:bg-muted transition-colors min-w-0"
             >
               <TwitterIcon className="w-4 h-4" /> {/* Lucide Twitter icon */}
               @{userProfile.twitterUsername}
             </a>
           )}
+          <a
+            href={`https://github.com/${username}`}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="flex items-center gap-2 px-3 py-1 bg-accent rounded-full text-sm text-foreground hover:bg-muted transition-colors min-w-0"
+          >
+            <GithubIcon className="w-4 h-4" /> 
+            @{username}
+          </a>
 
           {/* Other Social Accounts */}
           {userProfile.socialAccounts?.filter((account: any) =>
@@ -111,7 +114,6 @@ export default function UserProfile({ userProfile, username }: UserProfileProps)
               href={account.url}
               target="_blank"
               rel="noopener noreferrer"
-              // bg-(--border) -> bg-accent; text-(--color) -> text-foreground; hover:bg-(--sub-text) -> hover:bg-muted
               className="flex items-center gap-2 px-3 py-1 bg-accent rounded-full text-sm text-foreground hover:bg-muted transition-colors min-w-0"
             >
               <LinkedinIcon className="w-4 h-4" /> {/* Lucide Globe icon (general social link) */}

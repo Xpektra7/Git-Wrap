@@ -43,57 +43,59 @@ export default function DailyCommits({ username, theme, year }: DailyCommitsProp
   }, [username, year]);
 
   return (
-    <Card className="w-full h-full row-span-1 md:row-span-2 col-span-1 p-2">
-      {commitTimeAnalysis && prevCommitTimeAnalysis && commitTimeAnalysis.length === 7 ? (
-        <Line
-          data={{
+    <div className="bg-muted h-full row-span-1 md:row-span-2 col-span-1 p-1 rounded-2xl border border-border">
+      <Card className="w-full h-full row-span-1 md:row-span-2 col-span-1 p-2">
+        {commitTimeAnalysis && prevCommitTimeAnalysis && commitTimeAnalysis.length === 7 ? (
+          <Line
+            data={{
 
-            labels: commitTimeAnalysis.map((day) => day.day),
-            datasets: [
-              {
-                label: `Commits per Day (${year})`,
-                data: commitTimeAnalysis.map((day) => day.commits),
-                fill: false,
-                borderColor: `${theme === "light" ? "#000" : "#fff"}`,
-                tension: 0.25,
-                borderWidth: 2,
-                pointBorderColor: `${theme === "light" ? "#000" : "#fff"}`,
-              },
-              {
-                label: `Commits per Day (${year - 1})`,
-                data: prevCommitTimeAnalysis.map((day) => day.commits),
-                fill: false,
-                borderColor: `${theme === "light" ? "#b3b3b3" : "#4d4d4d"}`,
-                tension: 0.25,
-                borderWidth: 2,
-                pointBorderColor: `${theme === "light" ? "#b3b3b3" : "#4d4d4d"}`,
-              },
-            ],
-          }}
-          options={{
-            font: { family: 'Mozilla Text, Inter, system-ui' },
-            maintainAspectRatio: false,
+              labels: commitTimeAnalysis.map((day) => day.day),
+              datasets: [
+                {
+                  label: `Commits per Day (${year})`,
+                  data: commitTimeAnalysis.map((day) => day.commits),
+                  fill: false,
+                  borderColor: `${theme === "light" ? "#000" : "#fff"}`,
+                  tension: 0.25,
+                  borderWidth: 2,
+                  pointBorderColor: `${theme === "light" ? "#000" : "#fff"}`,
+                },
+                {
+                  label: `Commits per Day (${year - 1})`,
+                  data: prevCommitTimeAnalysis.map((day) => day.commits),
+                  fill: false,
+                  borderColor: `${theme === "light" ? "#b3b3b3" : "#4d4d4d"}`,
+                  tension: 0.25,
+                  borderWidth: 2,
+                  pointBorderColor: `${theme === "light" ? "#b3b3b3" : "#4d4d4d"}`,
+                },
+              ],
+            }}
+            options={{
+              font: { family: 'Mozilla Text, Inter, system-ui' },
+              maintainAspectRatio: false,
 
-            plugins: {
-              legend: { display: true, position: "bottom" },
-              title: {
-                display: true, text: "Daily Commits", font: { family: 'Jetbrains Mono' },
+              plugins: {
+                legend: { display: true, position: "bottom" },
+                title: {
+                  display: true, text: "Daily Commits", font: { family: 'Jetbrains Mono' },
+                },
               },
-            },
-            scales: {
-              x: {
-                grid: { color: 'oklch(1 0 0 / 10%)' }
-              },
-              y: {
-                grid: { color: 'oklch(1 0 0 / 10%)' }
+              scales: {
+                x: {
+                  grid: { color: 'oklch(1 0 0 / 10%)' }
+                },
+                y: {
+                  grid: { color: 'oklch(1 0 0 / 10%)' }
+                }
               }
-            }
 
-          }}
-        />
-      ) : (
-        <p>No daily commit data available.</p>
-      )}
-    </Card>
+            }}
+          />
+        ) : (
+          <p>No daily commit data available.</p>
+        )}
+      </Card>
+    </div>
   );
 }

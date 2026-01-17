@@ -254,8 +254,8 @@ export default function Stats({params} : any): React.ReactElement {
         <StatCard
           username={username}
           title="Longest Streaks/Breaks"
-          value={`Streak:${streakInfo.longestStreak || 0}`}
-          subtitle={`Break:${streakInfo.longestBreak || 0}`}
+          value={`Longest Streak:${streakInfo.longestStreak || 0}`}
+          subtitle={`Longest Break:${streakInfo.longestBreak || 0}`}
           prevValue={`Longest Streak:${prevStreakInfo.longestStreak || 0}`}
           prevSubtitle={`Longest Break:${prevStreakInfo.longestBreak || 0}`}
           growth={'ignore'}

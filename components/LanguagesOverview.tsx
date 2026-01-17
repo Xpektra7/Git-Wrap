@@ -43,44 +43,48 @@ export default function LanguageOverview({ username, year, theme }: LanguagesOve
     }, {});
 
   return (
-    <Card className="w-full h-full row-span-1 md:row-span-2 col-span-1 p-2">
-      {Object.keys(filtered).length > 0 ? (
-        <Bar
-          data={{
-            labels: Object.keys(filtered),
-            datasets: [
-              {
-                label: "Repos per Language",
-                data: Object.values(filtered),
-                backgroundColor: theme === "light" ? "#000" : "#e3e3e3",
-                borderRadius: 7,
+    <div className="bg-muted p-1 rounded-2xl border border-border">
+      <Card className="w-full h-full row-span-1 md:row-span-2 col-span-1 p-2">
+        {Object.keys(filtered).length > 0 ? (
+          <Bar
+            data={{
+              labels: Object.keys(filtered),
+              datasets: [
+                {
+                  label: "Repos per Language",
+                  data: Object.values(filtered),
+                  backgroundColor: theme === "light" ? "#000" : "#e3e3e3",
+                  borderRadius: 7,
+                },
+              ],
+            }}
+            options={{
+
+              maintainAspectRatio: false,
+              font: { family: 'Mozilla Text, Inter, system-ui' },
+              plugins: {
+                legend: { display: false },
+                title: {
+                  display: true, text: "Repos per Language", font: { family: 'Jetbrains Mono' },
+                },
               },
-            ],
-          }}
-          options={{
-            
-            maintainAspectRatio: false,
-            font: { family: 'Mozilla Text, Inter, system-ui' },
-            plugins: {
-              legend: { display: false },
-              title: {
-                display: true, text: "Repos per Language", font: { family: 'Jetbrains Mono' },
-              },
-            },
-            scales: {
-              x: {
-                grid: {color : 'oklch(1 0 0 / 10%)'}
-              },
-              y: {
-                beginAtZero: true,
-                grid: {color : 'oklch(1 0 0 / 10%)'}
+              scales: {
+                x: {
+                  grid: { color: 'oklch(1 0 0 / 10%)' }
+                },
+                y: {
+                  beginAtZero: true,
+                  grid: { color: 'oklch(1 0 0 / 10%)' }
+                }
               }
-            }
-          }}
-        />
-      ) : (
-        <p>No language data available.</p>
-      )}
-    </Card>
+            }}
+          />
+        ) : (
+          <div className="flex h-full items-center justify-center">
+            <p className="">No language data available.</p>
+          </div>
+        )}
+      </Card>
+    </div>
   );
 }

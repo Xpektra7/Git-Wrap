@@ -32,54 +32,58 @@ interface HourlyProps {
 
 export default function HourlyCommits({ commitTimeAnalysis, prevCommitTimeAnalysis, theme, year, prevYear }: HourlyProps) {
   return (
-    <Card className="w-full h-full row-span-1 md:row-span-2 col-span-1 p-2">
-      {commitTimeAnalysis?.hourDistribution?.length === 24 ? (
-        <Line
-          data={{
-            labels: [...Array(24).keys()].map((h) => h.toString().padStart(2, "0") + ":00"),
-            datasets: [
-              {
-                label: `Commits per Hour (${year})`,
-                data: commitTimeAnalysis.hourDistribution,
-                fill: false,
-                borderColor: `${theme === "light" ? "oklch(0.145 0 0)" : "oklch(1 0 0)"}`,
-                tension: 0.25,
-                borderWidth: 2,
-                pointBorderColor: `${theme === "light" ? "oklch(0.145 0 0)" : "oklch(1 0 0)"}`,
+    <div className="bg-muted h-full row-span-1 md:row-span-2 col-span-1 p-1 rounded-2xl border border-border">
+
+      <Card className="w-full h-full p-2">
+        {commitTimeAnalysis?.hourDistribution?.length === 24 ? (
+          <Line
+            data={{
+              labels: [...Array(24).keys()].map((h) => h.toString().padStart(2, "0") + ":00"),
+              datasets: [
+                {
+                  label: `Commits per Hour (${year})`,
+                  data: commitTimeAnalysis.hourDistribution,
+                  fill: false,
+                  borderColor: `${theme === "light" ? "oklch(0.145 0 0)" : "oklch(1 0 0)"}`,
+                  tension: 0.25,
+                  borderWidth: 2,
+                  pointBorderColor: `${theme === "light" ? "oklch(0.145 0 0)" : "oklch(1 0 0)"}`,
+                },
+                {
+                  label: `Commits per Hour (${prevYear})`,
+                  data: prevCommitTimeAnalysis.hourDistribution,
+                  fill: false,
+                  borderColor: `${theme === "light" ? "oklch(0.556 0 0)" : "oklch(0.5 0 0)"}`,
+                  tension: 0.25,
+                  borderWidth: 2,
+                  pointBorderColor: `${theme === "light" ? "oklch(0.556 0 0)" : "oklch(0.5 0 0)"}`,
+                },
+              ],
+            }}
+            options={{
+              maintainAspectRatio: false,
+              font: { family: 'Mozilla Text, Inter, system-ui' },
+              plugins: {
+                legend: { display: true, position: "bottom" },
+                title: {
+                  display: true, text: "Hourly Commits", font: { family: 'Jetbrains Mono' },
+                },
               },
-              {
-                label: `Commits per Hour (${prevYear})`,
-                data: prevCommitTimeAnalysis.hourDistribution,
-                fill: false,
-                borderColor: `${theme === "light" ? "oklch(0.556 0 0)" : "oklch(0.5 0 0)"}`,
-                tension: 0.25,
-                borderWidth: 2,
-                pointBorderColor: `${theme === "light" ? "oklch(0.556 0 0)" : "oklch(0.5 0 0)"}`,
-              },
-            ],
-          }}
-          options={{
-            maintainAspectRatio: false,
-            font: { family: 'Mozilla Text, Inter, system-ui' },
-            plugins: {
-              legend: { display: true, position: "bottom" },
-              title: {
-                display: true, text: "Hourly Commits", font: { family: 'Jetbrains Mono' },
-              },
-            },
-            scales: {
-              x: {
-                grid: {color : 'oklch(1 0 0 / 10%)'}
-              },
-              y: {
-                grid: {color : 'oklch(1 0 0 / 10%)'}
+              scales: {
+                x: {
+                  grid: { color: 'oklch(1 0 0 / 10%)' }
+                },
+                y: {
+                  grid: { color: 'oklch(1 0 0 / 10%)' }
+                }
               }
-            }
-          }}
-        />
-      ) : (
-        <p>No hourly commit data available.</p>
-      )}
-    </Card>
+            }}
+          />
+        ) : (
+          <p>No hourly commit data available.</p>
+        )}
+      </Card>
+
+    </div>
   );
 }

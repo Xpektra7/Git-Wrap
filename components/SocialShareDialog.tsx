@@ -8,7 +8,7 @@ import {
   DialogContent,
   DialogHeader,
   DialogTitle,
-  DialogDescription, // Added for semantic clarity
+  DialogDescription, // Added for semantic  clarity
 } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { Download, X, Twitter, MessageSquare, BoltIcon } from "lucide-react";
